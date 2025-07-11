@@ -63,4 +63,18 @@ frontend/
 
 ---
 
+## Responsive Layout Example
+
+A new responsive layout example using Ant Design's Layout, Sider, Header, Content, and Footer is available at:
+
+```
+frontend/src/pages/layout/layout.jsx
+```
+
+- The layout features a collapsible sidebar, header, and footer.
+- The sidebar collapses automatically on small screens (using the `breakpoint` prop).
+- You can use this file as a template for new pages that require a consistent, responsive layout.
+
+---
+
 For more details, see the code in the `src/` directory.
