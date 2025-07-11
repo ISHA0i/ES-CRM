@@ -8,12 +8,12 @@ import {
   UploadOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 
 const { Header, Sider, Content } = Layout;
 
 // Rename the component to avoid conflict with imported Layout
-const AdminLayout = ({ onLogout, children }) => {
+const AdminLayout = ({ onLogout }) => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -52,7 +52,7 @@ const AdminLayout = ({ onLogout, children }) => {
       label: 'Dashboard',
     },
     {
-      key: '2',
+      key: '/admin/leads',
       icon: <VideoCameraOutlined />,
       label: 'Leads',
     },
@@ -86,7 +86,7 @@ const AdminLayout = ({ onLogout, children }) => {
           mode="inline"
           selectedKeys={[location.pathname]}
           onClick={({ key }) => {
-            if (key === '/admin/dashboard') navigate(key);
+            navigate(key);
           }}
           items={menuItems}
         />
@@ -112,7 +112,7 @@ const AdminLayout = ({ onLogout, children }) => {
           />
         </Header>
         <Content style={contentStyle}>
-          {children}
+          <Outlet />
         </Content>
       </Layout>
     </Layout>

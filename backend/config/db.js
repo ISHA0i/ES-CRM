@@ -1,14 +1,13 @@
-const express = require('express');
-const app = express();
-const cors = require('cors');
-const leadsRouter = require('./routes/lead.routes');
+const mysql = require('mysql2/promise');
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+const db = mysql.createPool({
+  host: 'localhost',
+  user: 'root',         // your MySQL username
+  password: '',         // your MySQL password
+  database: 'heminfotech', // your database name
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
 
-// Routes
-app.use('/api/leads', leadsRouter);
-
-// Start Server
-app.listen(5000, () => console.log('Server running on port 5000'));       
+module.exports = db;

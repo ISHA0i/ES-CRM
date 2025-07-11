@@ -1,7 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import AdminLayout from "../pages/layout/layout.jsx";
 import AdminDashboard from '../pages/admin/Dashboard.jsx';
+import Lead from '../pages/admin/Lead.jsx';
 import Login from '../pages/auth/Login.jsx';
 import NotFound from '../pages/NotFound.jsx';
 
@@ -27,13 +28,16 @@ const AppRoutes = () => {
           path="/admin"
           element={
             role === 'admin' ? (
-              <AdminLayout onLogout={onLogout} />
+              <AdminLayout onLogout={onLogout}>
+                <Outlet />
+              </AdminLayout>
             ) : (
               <Navigate to="/login" />
             )
           }
         >
           <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="leads" element={<Lead />} />
           <Route path="*" element={<Navigate to="dashboard" />} />
         </Route>
         <Route
