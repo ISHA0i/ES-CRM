@@ -1,0 +1,64 @@
+@import '../../root.css';
+@import '../layout/layout.css';
+
+.hem-lead-table .ant-table-thead > tr > th {
+  background: var(--primary-200) !important;
+  color: var(--primary-500) !important;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.hem-lead-table .ant-table-tbody > tr:hover > td {
+  background: var(--primary-100) !important;
+}
+
+.hem-lead-table .ant-table-row-selected > td {
+  background: var(--primary-100) !important;
+}
+
+.hem-lead-table .ant-btn {
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.hem-lead-table .ant-btn[aria-label='View'],
+.hem-lead-table .ant-btn-view {
+  background: var(--accent-100);
+  color: var(--accent-500);
+}
+.hem-lead-table .ant-btn[aria-label='View']:hover,
+.hem-lead-table .ant-btn-view:hover {
+  background: var(--accent-200);
+  color: var(--accent-700);
+}
+
+.hem-lead-table .ant-btn[aria-label='Edit'],
+.hem-lead-table .ant-btn-edit {
+  background: var(--primary-100);
+  color: var(--primary-500);
+}
+.hem-lead-table .ant-btn[aria-label='Edit']:hover,
+.hem-lead-table .ant-btn-edit:hover {
+  background: var(--primary-200);
+  color: var(--primary-700);
+}
+
+.hem-lead-table .ant-btn[aria-label='Delete'],
+.hem-lead-table .ant-btn-delete {
+  background: #fff0f0;
+  color: #d4380d;
+}
+.hem-lead-table .ant-btn[aria-label='Delete']:hover,
+.hem-lead-table .ant-btn-delete:hover {
+  background: #ffd6d6;
+  color: #a8071a;
+}
+
+.hem-lead-table .ant-tag {
+  font-weight: 500;
+  border-radius: 4px;
+  font-size: 13px;
+  padding: 0 10px;
+} 

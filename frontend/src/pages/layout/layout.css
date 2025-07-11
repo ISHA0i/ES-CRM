@@ -1,6 +1,8 @@
+@import '../../root.css';
+
 .custom-sider {
-  background: #001529 !important;
-  color: #fff;
+  background: var(--primary-800) !important;
+  color: var(--accent-100);
   min-height: 100vh;
 }
 
@@ -28,4 +30,25 @@
   overflow: auto;
   box-sizing: border-box;
   width:1165px;
+}
+
+.ant-menu, .ant-menu-dark {
+  background: var(--primary-800) !important;
+  color: var(--accent-100) !important;
+}
+
+.ant-menu-item {
+  color: var(--accent-100) !important;
+  background: transparent !important;
+  transition: background 0.2s, color 0.2s;
+}
+
+.ant-menu-item-selected {
+  background: var(--accent-400) !important;
+  color: #fff !important;
+}
+
+.ant-menu-item:hover, .ant-menu-item-active {
+  background: var(--primary-100) !important;
+  color: var(--primary-500) !important;
 }

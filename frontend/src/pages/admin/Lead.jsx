@@ -1,54 +1,67 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
-  Table, Button, Drawer, Form, Input, Space, Dropdown, Menu, Popconfirm, message, Tag
+  Table, Button, Drawer, Form, Input, Space, Dropdown, Menu, Popconfirm, message, Tag, ConfigProvider
 } from 'antd';
 import { PlusOutlined, MoreOutlined } from '@ant-design/icons';
 import {
   fetchLeads, fetchLead, addLead, updateLead, deleteLead
 } from '../../api';
+import '../../root.css';
+
+// Custom styles for table header, row hover, and action buttons
+import './LeadTableCustom.css';
 
 const PAGE_SIZE = 10;
 
 const statusColors = {
-  New: 'blue',
-  Contacted: 'gold',
-  Converted: 'green',
-  Lost: 'red',
+  New: 'var(--accent-400)',
+  Contacted: 'var(--primary-300)',
+  Converted: 'var(--accent-500)',
+  Lost: 'var(--primary-200)',
 };
 
-const LeadForm = ({ initialValues = {}, onFinish, loading, readOnly = false }) => (
-  <Form
-    layout="vertical"
-    initialValues={initialValues}
-    onFinish={onFinish}
-    disabled={loading || readOnly}
-    style={{ maxHeight: '70vh', overflowY: 'auto', paddingRight: 8 }}
-  >
-    <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter name' }]}> 
-        <Input /> 
-        </Form.Item>
-    <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email', message: 'Please enter a valid email' }]}> 
-        <Input /> 
-        </Form.Item>
-    <Form.Item name="phone" label="Phone No" rules={[{ required: true, message: 'Please enter phone number' }]}> 
-        <Input />
-     </Form.Item>
-    <Form.Item name="whatsapp" label="WhatsApp No">
-         <Input /> 
-         </Form.Item>
-    <Form.Item name="reference" label="Reference"> 
-        <Input /> 
-    </Form.Item>
-    <Form.Item name="remark" label="Remark"> 
-        <Input.TextArea rows={2} /> 
-    </Form.Item>
-    {!readOnly && (
-      <Form.Item>
-        <Button type="primary" htmlType="submit" block loading={loading}>Submit</Button>
+const LeadForm = ({ initialValues = {}, onFinish, loading, readOnly = false }) => {
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue(initialValues);
+  }, [initialValues, form]);
+
+  return (
+    <Form
+      form={form}
+      layout="vertical"
+      initialValues={initialValues}
+      onFinish={onFinish}
+      disabled={loading || readOnly}
+      style={{ maxHeight: '70vh', overflowY: 'auto', paddingRight: 8 }}
+    >
+      <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter name' }]}> 
+          <Input /> 
+          </Form.Item>
+      <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email', message: 'Please enter a valid email' }]}> 
+          <Input /> 
+          </Form.Item>
+      <Form.Item name="phone" label="Phone No" rules={[{ required: true, message: 'Please enter phone number' }]}> 
+          <Input />
+       </Form.Item>
+      <Form.Item name="whatsapp" label="WhatsApp No">
+           <Input /> 
+           </Form.Item>
+      <Form.Item name="reference" label="Reference"> 
+          <Input /> 
       </Form.Item>
-    )}
-  </Form>
-);
+      <Form.Item name="remark" label="Remark"> 
+          <Input.TextArea rows={2} /> 
+      </Form.Item>
+      {!readOnly && (
+        <Form.Item>
+          <Button type="primary" htmlType="submit" block loading={loading}>Submit</Button>
+        </Form.Item>
+      )}
+    </Form>
+  );
+};
 
 const LeadsPage = () => {
   const [leads, setLeads] = useState([]);
@@ -154,8 +167,12 @@ const LeadsPage = () => {
         <Dropdown
           overlay={
             <Menu>
-              <Menu.Item key="view" onClick={() => handleView(record.id)}>View</Menu.Item>
-              <Menu.Item key="edit" onClick={() => handleEdit(record.id)}>Edit</Menu.Item>
+              <Menu.Item key="view">
+                <Button aria-label="View" className="ant-btn-view" size="small" onClick={() => handleView(record.id)} style={{ marginRight: 8 }}>View</Button>
+              </Menu.Item>
+              <Menu.Item key="edit">
+                <Button aria-label="Edit" className="ant-btn-edit" size="small" onClick={() => handleEdit(record.id)} style={{ marginRight: 8 }}>Edit</Button>
+              </Menu.Item>
               <Menu.Item key="delete">
                 <Popconfirm
                   title="Are you sure to delete this lead?"
@@ -163,14 +180,14 @@ const LeadsPage = () => {
                   okText="Yes"
                   cancelText="No"
                 >
-                  Delete
+                  <Button aria-label="Delete" className="ant-btn-delete" size="small">Delete</Button>
                 </Popconfirm>
               </Menu.Item>
             </Menu>
           }
           trigger={["click"]}
         >
-          <Button icon={<MoreOutlined />} />
+          <Button icon={<MoreOutlined />} style={{ borderRadius: 6, background: 'var(--primary-100)', color: 'var(--primary-500)' }} />
         </Dropdown>
       ),
       responsive: ['xs', 'sm', 'md', 'lg', 'xl']
@@ -178,59 +195,71 @@ const LeadsPage = () => {
   ];
 
   return (
-    <div style={{ width: '100%' }}>
-      <Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between', display: 'flex' }}>
-        <h2 style={{ margin: 0 }}>Leads</h2>
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>Add Lead</Button>
-      </Space>
-      <Table
-        columns={columns}
-        dataSource={leads}
-        rowKey="id"
-        loading={loading}
-        pagination={{
-          current: page,
-          pageSize: PAGE_SIZE,
-          total,
-          showSizeChanger: false,
-          onChange: (p) => setPage(p),
-          showTotal: (t, range) => `${range[0]}-${range[1]} of ${t} leads`,
-          showQuickJumper: true,
-        }}
-        scroll={{ x: 'max-content', y: 400 }} // Add vertical scroll and fix header
-        bordered
-        size="middle"
-        style={{ background: '#fff' }}
-      />
-      <Drawer
-        title={drawer.mode === 'add' ? 'Add Lead' : drawer.mode === 'edit' ? 'Edit Lead' : 'View Lead'}
-        open={drawer.open}
-        onClose={handleDrawerClose}
-        width={400}
-        // Remove styles.body with overflow/height
-        destroyOnClose
-        maskClosable={!formLoading}
-        footer={null}
-        placement="right"
-        style={{ zIndex: 2000 }}
-      >
-        {(drawer.mode === 'add' || drawer.mode === 'edit') && (
-          <LeadForm
-            initialValues={drawer.lead || {}}
-            onFinish={handleFormFinish}
-            loading={formLoading}
-            readOnly={false}
-          />
-        )}
-        {drawer.mode === 'view' && (
-          <LeadForm
-            initialValues={drawer.lead || {}}
-            loading={formLoading}
-            readOnly={true}
-          />
-        )}
-      </Drawer>
-    </div>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: 'var(--accent-500)',
+          colorBgContainer: 'var(--background-color)',
+          colorText: 'var(--primary-500)',
+          colorBorder: 'var(--border-color)',
+        },
+      }}
+    >
+      <div style={{ width: '100%', background: 'var(--background-alt)', minHeight: '100vh' }}>
+        <Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between', display: 'flex' }}>
+          <h2 style={{ margin: 0, color: 'var(--primary-400)', letterSpacing: 2 }}>Leads</h2>
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd} style={{ background: 'var(--accent-500)', borderColor: 'var(--accent-500)', borderRadius: 6 }}>Add Lead</Button>
+        </Space>
+        <Table
+          columns={columns}
+          dataSource={leads}
+          rowKey="id"
+          loading={loading}
+          pagination={{
+            current: page,
+            pageSize: PAGE_SIZE,
+            total,
+            showSizeChanger: false,
+            onChange: (p) => setPage(p),
+            showTotal: (t, range) => `${range[0]}-${range[1]} of ${t} leads`,
+            showQuickJumper: true,
+          }}
+          scroll={{ x: 'max-content', y: 400 }}
+          bordered
+          size="middle"
+          style={{ background: 'var(--background-color)', borderRadius: 10 }}
+          title={() => null}
+          className="hem-lead-table"
+        />
+        <Drawer
+          title={drawer.mode === 'add' ? 'Add Lead' : drawer.mode === 'edit' ? 'Edit Lead' : 'View Lead'}
+          open={drawer.open}
+          onClose={handleDrawerClose}
+          width={400}
+          destroyOnClose
+          maskClosable={!formLoading}
+          footer={null}
+          placement="right"
+          style={{ zIndex: 2000, background: 'var(--background-color)' }}
+        >
+          {(drawer.mode === 'add' || drawer.mode === 'edit') && (
+            <LeadForm
+              initialValues={drawer.lead || {}}
+              onFinish={handleFormFinish}
+              loading={formLoading}
+              readOnly={false}
+            />
+          )}
+          {drawer.mode === 'view' && (
+            <LeadForm
+              initialValues={drawer.lead || {}}
+              loading={formLoading}
+              readOnly={true}
+            />
+          )}
+        </Drawer>
+      </div>
+    </ConfigProvider>
   );
 };
 

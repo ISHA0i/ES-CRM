@@ -1,0 +1,31 @@
+:root {
+  /* Primary (Dark Blue) Palette */
+  --primary-100: #e6eaf0;
+  --primary-200: #b3bed1;
+  --primary-300: #8091b2;
+  --primary-400: #4d6593;
+  --primary-500: #1a2c47; /* Base */
+  --primary-600: #16253b;
+  --primary-700: #121e2f;
+  --primary-800: #0d1623;
+  --primary-900: #090f17;
+
+  /* Accent (Orange) Palette */
+  --accent-100: #ffe5d1;
+  --accent-200: #ffc299;
+  --accent-300: #ff9e61;
+  --accent-400: #ff7a29;
+  --accent-500: #f37021; /* Base */
+  --accent-600: #c95a1a;
+  --accent-700: #9f4413;
+  --accent-800: #742e0c;
+  --accent-900: #4a1805;
+
+  /* Neutral and Utility */
+  --background-color: #ffffff;
+  --background-alt: #f5f7fa;
+  --text-color: #1a2c47;
+  --text-light: #4a5a6a;
+  --header-color: #f37021;
+  --border-color: #e0e6ed;
+}

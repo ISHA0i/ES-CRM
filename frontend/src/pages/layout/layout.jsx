@@ -9,6 +9,8 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+import HemInfotechLogo from '../../assets/Hem Infotech Logo.png';
+import '../../root.css'
 
 const { Header, Sider, Content } = Layout;
 
@@ -18,24 +20,18 @@ const AdminLayout = ({ onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const siderStyle = {
-    background: '#001529',
-    color: '#fff',
-    minHeight: '100vh',
-  };
-
   const headerStyle = {
-    background: '#fff',
+    background: 'var(--background-color)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '0 24px 0 0',
     minHeight: 64,
     height: 64,
-    borderBottom: '1px solid #f0f0f0',
+    // borderBottom: '1px solid var(--border-color)',
     zIndex: 10,
     width: '100%',
-    // Let Ant Design handle sizing!
+    // boxShadow: '0 2px 8px #e6eaf0',
   };
 
   const contentStyle = {
@@ -43,6 +39,8 @@ const AdminLayout = ({ onLogout }) => {
     minHeight: 'calc(100vh - 64px)',
     margin: 0,
     width: '100%',
+    background: 'var(--background-alt)',
+    borderRadius: 12,
   };
 
   const menuItems = [
@@ -70,17 +68,26 @@ const AdminLayout = ({ onLogout }) => {
         collapsed={collapsed}
         onCollapse={setCollapsed}
         width={240}
-        style={siderStyle}
+        className="custom-sider"
         breakpoint="md"
         trigger={null}
       >
         <div
           style={{
-            height: 32,
-            margin: 16,
-            background: 'rgba(255,255,255,0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            // height: 32,
+            marginBottom:  12,
+            background: 'var(--accent-200)',
+            // borderRadius: 12,
+            padding: 12,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
           }}
-        />
+        >
+          <img src={HemInfotechLogo} alt="Hem Infotech Logo" style={{ height: 40, maxWidth: 180, objectFit: 'contain', borderRadius: 8, display: 'block' }} />
+        </div>
+
         <Menu
           theme="dark"
           mode="inline"
@@ -100,8 +107,8 @@ const AdminLayout = ({ onLogout }) => {
               onClick={() => setCollapsed(!collapsed)}
               style={{ fontSize: '16px', width: 64, height: 64 }}
             />
-            <span style={{ fontWeight: 'bold', fontSize: 18, marginLeft: 16 }}>
-              Header
+            <span style={{ fontWeight: 'bold', fontSize: 18, marginLeft: 16, color: 'var(--header-color)', letterSpacing: 2 }}>
+              HEM INFOTECH
             </span>
           </div>
           <Button
