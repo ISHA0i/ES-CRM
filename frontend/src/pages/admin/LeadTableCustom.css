@@ -12,8 +12,13 @@
   background: var(--primary-100) !important;
 }
 
-.hem-lead-table .ant-table-row-selected > td {
-  background: var(--primary-100) !important;
+.hem-lead-table .ant-table-row-selected > td,
+.hem-lead-table .ant-table-row:hover > td,
+.hem-lead-table .ant-table-row.ant-table-row-active > td,
+.hem-lead-table .ant-table-row:focus-within > td,
+.hem-lead-table .ant-table-row[aria-expanded='true'] > td {
+  background: var(--primary-400) !important;
+  color: var(--primary-500) !important;
 }
 
 .hem-lead-table .ant-btn {
