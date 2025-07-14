@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
-  Table, Button, Drawer, Form, Input, Space, Dropdown, Menu, Popconfirm, message, Tag, ConfigProvider
+  Table, Button, Drawer, Form, Input, Space, Dropdown, Menu, Popconfirm, message, Tag, ConfigProvider,
+  AutoComplete
 } from 'antd';
-import { PlusOutlined, MoreOutlined } from '@ant-design/icons';
+import { PlusOutlined, MoreOutlined, PhoneOutlined, WhatsAppOutlined } from '@ant-design/icons';
 import {
-  fetchLeads, fetchLead, addLead, updateLead, deleteLead
+  fetchClients, fetchClient, addClient, updateClient, deleteClient
 } from '../../api';
 import '../../root.css';
 
@@ -13,14 +14,7 @@ import './LeadTableCustom.css';
 
 const PAGE_SIZE = 10;
 
-const statusColors = {
-  New: 'var(--accent-400)',
-  Contacted: 'var(--primary-300)',
-  Converted: 'var(--accent-500)',
-  Lost: 'var(--primary-200)',
-};
-
-const LeadForm = ({ initialValues = {}, onFinish, loading, readOnly = false }) => {
+const ClientForm = ({ initialValues = {}, onFinish, loading, readOnly = false, formId }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -34,7 +28,7 @@ const LeadForm = ({ initialValues = {}, onFinish, loading, readOnly = false }) =
       initialValues={initialValues}
       onFinish={onFinish}
       disabled={loading || readOnly}
-      style={{ maxHeight: '70vh', overflowY: 'auto', paddingRight: 8 }}
+      id={formId}
     >
       <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter name' }]}> 
           <Input /> 
@@ -54,82 +48,82 @@ const LeadForm = ({ initialValues = {}, onFinish, loading, readOnly = false }) =
       <Form.Item name="remark" label="Remark"> 
           <Input.TextArea rows={2} /> 
       </Form.Item>
-      {!readOnly && (
+      {/* {!readOnly && (
         <Form.Item>
           <Button type="primary" htmlType="submit" block loading={loading}>Submit</Button>
         </Form.Item>
-      )}
+      )} */}
     </Form>
   );
 };
 
-const LeadsPage = () => {
-  const [leads, setLeads] = useState([]);
+const ClientsPage = () => {
+  const [clients, setClients] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [drawer, setDrawer] = useState({ open: false, mode: '', lead: null });
+  const [drawer, setDrawer] = useState({ open: false, mode: '', client: null });
   const [page, setPage] = useState(1);
   const [formLoading, setFormLoading] = useState(false);
 
-  const loadLeads = useCallback(async (pageNum = page) => {
+  const loadClients = useCallback(async (pageNum = page) => {
     setLoading(true);
     try {
-      const { data } = await fetchLeads(pageNum, PAGE_SIZE);
-      setLeads(data.leads);
+      const { data } = await fetchClients(pageNum, PAGE_SIZE);
+      setClients(data.clients);
       setTotal(data.total);
     } catch {
-      message.error('Failed to load leads');
+      message.error('Failed to load clients');
     } finally {
       setLoading(false);
     }
   }, [page]);
 
-  useEffect(() => { loadLeads(page); }, [loadLeads, page]);
+  useEffect(() => { loadClients(page); }, [loadClients, page]);
 
-  const handleAdd = () => setDrawer({ open: true, mode: 'add', lead: null });
+  const handleAdd = () => setDrawer({ open: true, mode: 'add', client: null });
   const handleEdit = async (id) => {
-    setDrawer({ open: true, mode: 'edit', lead: null });
+    setDrawer({ open: true, mode: 'edit', client: null });
     setFormLoading(true);
     try {
-      const { data } = await fetchLead(id);
-      setDrawer({ open: true, mode: 'edit', lead: data });
+      const { data } = await fetchClient(id);
+      setDrawer({ open: true, mode: 'edit', client: data });
     } finally { setFormLoading(false); }
   };
   const handleView = async (id) => {
-    setDrawer({ open: true, mode: 'view', lead: null });
+    setDrawer({ open: true, mode: 'view', client: null });
     setFormLoading(true);
     try {
-      const { data } = await fetchLead(id);
-      setDrawer({ open: true, mode: 'view', lead: data });
+      const { data } = await fetchClient(id);
+      setDrawer({ open: true, mode: 'view', client: data });
     } finally { setFormLoading(false); }
   };
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      await deleteLead(id);
-      message.success('Lead deleted');
-      loadLeads(1);
+      await deleteClient(id);
+      message.success('Client deleted');
+      loadClients(1);
       setPage(1);
     } catch {
-      message.error('Failed to delete lead');
+      message.error('Failed to delete client');
     } finally {
       setLoading(false);
     }
   };
-  const handleDrawerClose = () => setDrawer({ open: false, mode: '', lead: null });
+  const handleDrawerClose = () => setDrawer({ open: false, mode: '', client: null });
 
   const handleFormFinish = async (values) => {
     setFormLoading(true);
     try {
       if (drawer.mode === 'add') {
-        await addLead({ ...values });
-        message.success('Lead added');
-        loadLeads(1);
+        await addClient({ ...values });
+        message.success('Client added');
+        loadClients(1);
         setPage(1);
       } else if (drawer.mode === 'edit') {
-        await updateLead(drawer.lead.id, { ...drawer.lead, ...values });
-        message.success('Lead updated');
-        loadLeads(page);
+        await updateClient(drawer.client.id, { ...drawer.client, ...values });
+        message.success('Client updated');
+        loadClients(page);
       }
       handleDrawerClose();
     } catch {
@@ -145,21 +139,24 @@ const LeadsPage = () => {
       dataIndex: 'srNo',
       key: 'srNo',
       render: (_, __, index) => (page - 1) * PAGE_SIZE + index + 1,
-      width: 70,
+      width: 55,
     },
-    { title: 'Name', dataIndex: 'name', key: 'name', responsive: ['xs', 'sm', 'md', 'lg', 'xl'] },
-    { title: 'Email', dataIndex: 'email', key: 'email', responsive: ['md', 'lg', 'xl'] },
-    { title: 'Phone', dataIndex: 'phone', key: 'phone', responsive: ['sm', 'md', 'lg', 'xl'] },
-    { title: 'WhatsApp', dataIndex: 'whatsapp', key: 'whatsapp', responsive: ['md', 'lg', 'xl'] },
-    { title: 'Reference', dataIndex: 'reference', key: 'reference', responsive: ['lg', 'xl'] },
-    { title: 'Remark', dataIndex: 'remark', key: 'remark', responsive: ['lg', 'xl'] },
+    { title: 'Name', dataIndex: 'name', key: 'name', responsive: ['xs', 'sm', 'md', 'lg', 'xl'], width: AutoComplete },
+    { title: 'Email', dataIndex: 'email', key: 'email', responsive: ['md', 'lg', 'xl'], width: AutoComplete },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status) => <Tag color={statusColors[status] || 'default'}>{status}</Tag>,
-      responsive: ['sm', 'md', 'lg', 'xl']
+      title: 'Contact',
+      key: 'contact',
+      render: (_, record) => (
+        <div>
+          <div><PhoneOutlined style={{ color: '#1890ff', marginRight: 4 }} />{record.phone || '-'}</div>
+          <div><WhatsAppOutlined style={{ color: '#25D366', marginRight: 4 }} />{record.whatsapp || '-'}</div>
+        </div>
+      ),
+      responsive: ['sm', 'md', 'lg', 'xl'],
+      width: AutoComplete,
     },
+    { title: 'Reference', dataIndex: 'reference', key: 'reference', responsive: ['lg', 'xl'], width: AutoComplete },
+    { title: 'Remark', dataIndex: 'remark', key: 'remark', responsive: ['lg', 'xl'], width: AutoComplete },
     {
       title: 'Action',
       key: 'action',
@@ -175,7 +172,7 @@ const LeadsPage = () => {
               </Menu.Item>
               <Menu.Item key="delete">
                 <Popconfirm
-                  title="Are you sure to delete this lead?"
+                  title="Are you sure to delete this client?"
                   onConfirm={() => handleDelete(record.id)}
                   okText="Yes"
                   cancelText="No"
@@ -207,12 +204,12 @@ const LeadsPage = () => {
     >
       <div style={{ width: '100%', background: 'var(--background-alt)', minHeight: '100vh' }}>
         <Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between', display: 'flex' }}>
-          <h2 style={{ margin: 0, color: 'var(--primary-400)', letterSpacing: 2 }}>Leads</h2>
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd} style={{ background: 'var(--accent-500)', borderColor: 'var(--accent-500)', borderRadius: 6 }}>Add Lead</Button>
+          <h2 style={{ margin: 0, color: 'var(--primary-400)', letterSpacing: 2 }}>Clients</h2>
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd} style={{ background: 'var(--accent-500)', borderColor: 'var(--accent-500)', borderRadius: 6 }}>Add Client</Button>
         </Space>
         <Table
           columns={columns}
-          dataSource={leads}
+          dataSource={clients}
           rowKey="id"
           loading={loading}
           pagination={{
@@ -221,7 +218,7 @@ const LeadsPage = () => {
             total,
             showSizeChanger: false,
             onChange: (p) => setPage(p),
-            showTotal: (t, range) => `${range[0]}-${range[1]} of ${t} leads`,
+            showTotal: (t, range) => `${range[0]}-${range[1]} of ${t} clients`,
             showQuickJumper: true,
           }}
           scroll={{ x: 'max-content', y: 400 }}
@@ -232,29 +229,36 @@ const LeadsPage = () => {
           className="hem-lead-table"
         />
         <Drawer
-          title={drawer.mode === 'add' ? 'Add Lead' : drawer.mode === 'edit' ? 'Edit Lead' : 'View Lead'}
+          title={drawer.mode === 'add' ? 'Add Client' : drawer.mode === 'edit' ? 'Edit Client' : 'View Client'}
           open={drawer.open}
           onClose={handleDrawerClose}
           width={400}
           destroyOnClose
           maskClosable={!formLoading}
-          footer={null}
+          footer={drawer.mode === 'add' || drawer.mode === 'edit' ? (
+            <Button type="primary" htmlType="submit" form="client-form" block loading={formLoading}>
+              Submit
+            </Button>
+          ) : null}
           placement="right"
-          style={{ zIndex: 2000, background: 'var(--background-color)' }}
+          style={{ zIndex: 2000, background: 'var(--background-color)', height: '100vh' }}
+          bodyStyle={{ paddingBottom: 24 }}
         >
           {(drawer.mode === 'add' || drawer.mode === 'edit') && (
-            <LeadForm
-              initialValues={drawer.lead || {}}
+            <ClientForm
+              initialValues={drawer.client || {}}
               onFinish={handleFormFinish}
               loading={formLoading}
               readOnly={false}
+              formId="client-form"
             />
           )}
           {drawer.mode === 'view' && (
-            <LeadForm
-              initialValues={drawer.lead || {}}
+            <ClientForm
+              initialValues={drawer.client || {}}
               loading={formLoading}
               readOnly={true}
+              formId="client-form"
             />
           )}
         </Drawer>
@@ -263,4 +267,4 @@ const LeadsPage = () => {
   );
 };
 
-export default LeadsPage;
+export default ClientsPage;

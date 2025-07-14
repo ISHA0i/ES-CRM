@@ -71,6 +71,23 @@ frontend/
 - Use the action menu on each row to view, edit, or delete a lead.
 - Pagination controls are at the bottom of the table.
 
+## Client Management Page
+
+- Navigate to **/admin/clients** for the Clients management page.
+- Features:
+  - View, add, edit, and delete clients.
+  - When a lead is approved from the Leads page, it is moved to the Clients table.
+  - All forms and views are in fixed, scrollable drawers.
+  - Table with pagination, continuous numbers, and responsive design.
+  - 3-dot menu for actions (edit, view, delete with pop confirm).
+  - Fully connected to backend API.
+
+### Usage
+- Click **Add Client** to open the drawer and submit a new client.
+- Use the action menu on each row to view, edit, or delete a client.
+- Clients are also created automatically when a lead is approved from the Leads page.
+- Pagination controls are at the bottom of the table.
+
 ## Customization
 - Add more pages to each role in their respective folders under `src/pages/`.
 - Update the sidebar menu in each layout (`AdminLayout.jsx`, `UserLayout.jsx`, `ManagerLayout.jsx`).

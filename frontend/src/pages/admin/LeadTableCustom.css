@@ -6,18 +6,20 @@
   color: var(--primary-500) !important;
   font-weight: 600;
   letter-spacing: 1px;
+  padding: 6px 6px !important;
 }
 
 .hem-lead-table .ant-table-tbody > tr:hover > td {
   background: var(--primary-100) !important;
 }
 
-.hem-lead-table .ant-table-row-selected > td,
-.hem-lead-table .ant-table-row:hover > td,
-.hem-lead-table .ant-table-row.ant-table-row-active > td,
-.hem-lead-table .ant-table-row:focus-within > td,
-.hem-lead-table .ant-table-row[aria-expanded='true'] > td {
-  background: var(--primary-400) !important;
+.hem-lead-table .ant-table-tbody > tr.ant-table-row-selected > td,
+.hem-lead-table .ant-table-tbody > tr.ant-table-row:hover > td,
+.hem-lead-table .ant-table-tbody > tr.ant-table-row.ant-table-row-active > td,
+.hem-lead-table .ant-table-tbody > tr.ant-table-row:focus-within > td,
+.hem-lead-table .ant-table-tbody > tr.ant-table-row[aria-expanded='true'] > td,
+.hem-lead-table .ant-table-tbody > tr.ant-table-row:active > td {
+  background: var(--primary-100) !important;
   color: var(--primary-500) !important;
 }
 
@@ -26,6 +28,8 @@
   transition: background 0.2s, color 0.2s;
   border: none !important;
   box-shadow: none !important;
+  padding: 0px 2px !important;
+  font-size: 12px !important;
 }
 
 .hem-lead-table .ant-btn[aria-label='View'],
@@ -64,6 +68,10 @@
 .hem-lead-table .ant-tag {
   font-weight: 500;
   border-radius: 4px;
-  font-size: 13px;
-  padding: 0 10px;
+  font-size: 11px;
+  padding: 0 2px;
+}
+
+.hem-lead-table .ant-table-tbody > tr > td {
+  padding: 0px 2px !important;
 } 

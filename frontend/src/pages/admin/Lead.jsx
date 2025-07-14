@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
-  Table, Button, Drawer, Form, Input, Space, Dropdown, Menu, Popconfirm, message, Tag, ConfigProvider
+  Table, Button, Drawer, Form, Input, Space, Dropdown, Menu, Popconfirm, message, Tag, ConfigProvider,
+  AutoComplete
 } from 'antd';
-import { PlusOutlined, MoreOutlined } from '@ant-design/icons';
+import { PlusOutlined, MoreOutlined, PhoneOutlined, WhatsAppOutlined } from '@ant-design/icons';
 import {
-  fetchLeads, fetchLead, addLead, updateLead, deleteLead
+  fetchLeads, fetchLead, addLead, updateLead, deleteLead, addClient
 } from '../../api';
 import '../../root.css';
 
@@ -18,9 +19,10 @@ const statusColors = {
   Contacted: 'var(--primary-300)',
   Converted: 'var(--accent-500)',
   Lost: 'var(--primary-200)',
+  Approved: 'var(--accent-200)',
 };
 
-const LeadForm = ({ initialValues = {}, onFinish, loading, readOnly = false }) => {
+const LeadForm = ({ initialValues = {}, onFinish, loading, readOnly = false, formId }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -34,7 +36,7 @@ const LeadForm = ({ initialValues = {}, onFinish, loading, readOnly = false }) =
       initialValues={initialValues}
       onFinish={onFinish}
       disabled={loading || readOnly}
-      style={{ maxHeight: '70vh', overflowY: 'auto', paddingRight: 8 }}
+      id={formId}
     >
       <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter name' }]}> 
           <Input /> 
@@ -54,11 +56,11 @@ const LeadForm = ({ initialValues = {}, onFinish, loading, readOnly = false }) =
       <Form.Item name="remark" label="Remark"> 
           <Input.TextArea rows={2} /> 
       </Form.Item>
-      {!readOnly && (
+      {/* {!readOnly && (
         <Form.Item>
           <Button type="primary" htmlType="submit" block loading={loading}>Submit</Button>
         </Form.Item>
-      )}
+      )} */}
     </Form>
   );
 };
@@ -116,6 +118,29 @@ const LeadsPage = () => {
       setLoading(false);
     }
   };
+  const handleApprove = async (record) => {
+    setLoading(true);
+    try {
+      // Update lead status to Approved
+      await updateLead(record.id, { ...record, status: 'Approved' });
+      // Add to client table
+      await addClient({
+        lead_id: record.id,
+        name: record.name,
+        email: record.email,
+        phone: record.phone,
+        whatsapp: record.whatsapp,
+        reference: record.reference,
+        remark: record.remark,
+      });
+      message.success('Lead approved and moved to clients');
+      loadLeads(page);
+    } catch {
+      message.error('Failed to approve lead');
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleDrawerClose = () => setDrawer({ open: false, mode: '', lead: null });
 
   const handleFormFinish = async (values) => {
@@ -145,20 +170,42 @@ const LeadsPage = () => {
       dataIndex: 'srNo',
       key: 'srNo',
       render: (_, __, index) => (page - 1) * PAGE_SIZE + index + 1,
-      width: 70,
+      width: 55,
     },
-    { title: 'Name', dataIndex: 'name', key: 'name', responsive: ['xs', 'sm', 'md', 'lg', 'xl'] },
-    { title: 'Email', dataIndex: 'email', key: 'email', responsive: ['md', 'lg', 'xl'] },
-    { title: 'Phone', dataIndex: 'phone', key: 'phone', responsive: ['sm', 'md', 'lg', 'xl'] },
-    { title: 'WhatsApp', dataIndex: 'whatsapp', key: 'whatsapp', responsive: ['md', 'lg', 'xl'] },
-    { title: 'Reference', dataIndex: 'reference', key: 'reference', responsive: ['lg', 'xl'] },
-    { title: 'Remark', dataIndex: 'remark', key: 'remark', responsive: ['lg', 'xl'] },
+    { title: 'Name', dataIndex: 'name', key: 'name', responsive: ['xs', 'sm', 'md', 'lg', 'xl'], width: AutoComplete },
+    { title: 'Email', dataIndex: 'email', key: 'email', responsive: ['md', 'lg', 'xl'], width: AutoComplete },
+    {
+      title: 'Contact',
+      key: 'contact',
+      render: (_, record) => (
+        <div>
+          <div><PhoneOutlined style={{ color: '#1890ff', marginRight: 4 }} />{record.phone || '-'}</div>
+          <div><WhatsAppOutlined style={{ color: '#25D366', marginRight: 4 }} />{record.whatsapp || '-'}</div>
+        </div>
+      ),
+      responsive: ['sm', 'md', 'lg', 'xl'],
+      width: AutoComplete,
+    },
+    { title: 'Reference', dataIndex: 'reference', key: 'reference', responsive: ['lg', 'xl'], width: AutoComplete },
+    { title: 'Remark', dataIndex: 'remark', key: 'remark', responsive: ['lg', 'xl'], width: AutoComplete },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (status) => <Tag color={statusColors[status] || 'default'}>{status}</Tag>,
-      responsive: ['sm', 'md', 'lg', 'xl']
+      render: (status, record) =>
+        status === 'New' ? (
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => handleApprove(record)}
+            style={{ background: 'var(--primary-300)', borderColor: 'var(--primary-400)' }}
+          >
+            Approve
+          </Button>
+        ) : (
+          <Tag color={statusColors[status] || 'default'}>{status}</Tag>
+        ),
+      responsive: ['sm', 'md', 'lg', 'xl'],
     },
     {
       title: 'Action',
@@ -238,9 +285,14 @@ const LeadsPage = () => {
           width={400}
           destroyOnClose
           maskClosable={!formLoading}
-          footer={null}
+          footer={drawer.mode === 'add' || drawer.mode === 'edit' ? (
+            <Button type="primary" htmlType="submit" form="lead-form" block loading={formLoading}>
+              Submit
+            </Button>
+          ) : null}
           placement="right"
-          style={{ zIndex: 2000, background: 'var(--background-color)' }}
+          style={{ zIndex: 2000, background: 'var(--background-color)', height: '100vh' }}
+          bodyStyle={{ paddingBottom: 24 }}
         >
           {(drawer.mode === 'add' || drawer.mode === 'edit') && (
             <LeadForm
@@ -248,6 +300,7 @@ const LeadsPage = () => {
               onFinish={handleFormFinish}
               loading={formLoading}
               readOnly={false}
+              formId="lead-form"
             />
           )}
           {drawer.mode === 'view' && (
@@ -255,6 +308,7 @@ const LeadsPage = () => {
               initialValues={drawer.lead || {}}
               loading={formLoading}
               readOnly={true}
+              formId="lead-form"
             />
           )}
         </Drawer>

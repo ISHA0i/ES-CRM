@@ -11,6 +11,7 @@ import {
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import HemInfotechLogo from '../../assets/Hem Infotech Logo.png';
 import '../../root.css'
+import { HomeIcon, UsersIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 
 const { Header, Sider, Content } = Layout;
 
@@ -35,7 +36,7 @@ const AdminLayout = ({ onLogout }) => {
   };
 
   const contentStyle = {
-    padding: 24,
+    padding: 10,
     minHeight: 'calc(100vh - 64px)',
     margin: 0,
     width: '100%',
@@ -46,18 +47,18 @@ const AdminLayout = ({ onLogout }) => {
   const menuItems = [
     {
       key: '/admin/dashboard',
-      icon: <UserOutlined />,
+      icon: <HomeIcon style={{ width: 20, height: 20 }} />, // Dashboard
       label: 'Dashboard',
     },
     {
       key: '/admin/leads',
-      icon: <VideoCameraOutlined />,
+      icon: <UsersIcon style={{ width: 20, height: 20 }} />, // Leads
       label: 'Leads',
     },
     {
-      key: '3',
-      icon: <UploadOutlined />,
-      label: 'nav 3',
+      key: '/admin/clients',
+      icon: <UserGroupIcon style={{ width: 20, height: 20 }} />, // Clients
+      label: 'Clients',
     },
   ];
 
@@ -98,7 +99,7 @@ const AdminLayout = ({ onLogout }) => {
           items={menuItems}
         />
       </Sider>
-      <Layout>
+      <Layout className="layout-content-with-fixed-sider">
         <Header style={headerStyle}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Button
