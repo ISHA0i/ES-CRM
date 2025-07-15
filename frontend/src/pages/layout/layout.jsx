@@ -11,7 +11,7 @@ import {
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import HemInfotechLogo from '../../assets/Hem Infotech Logo.png';
 import '../../root.css'
-import { HomeIcon, UsersIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, UsersIcon, UserGroupIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
 
 const { Header, Sider, Content } = Layout;
 
@@ -59,6 +59,11 @@ const AdminLayout = ({ onLogout }) => {
       key: '/admin/clients',
       icon: <UserGroupIcon style={{ width: 20, height: 20 }} />, // Clients
       label: 'Clients',
+    },
+    {
+      key: '/admin/inventory',
+      icon: <ArchiveBoxIcon style={{ width: 20, height: 20 }} />, // Inventory
+      label: 'Inventory',
     },
   ];
 

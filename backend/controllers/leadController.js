@@ -5,8 +5,12 @@ exports.getLeads = async (req, res) => {
   const pageSize = parseInt(req.query.pageSize) || 10;
   const offset = (page - 1) * pageSize;
   try {
-    const { leads, total } = await Lead.getLeads(offset, pageSize);
-    res.json({ leads, total });
+    const { rows, count } = await Lead.findAndCountAll({
+      offset,
+      limit: pageSize,
+      order: [['id', 'DESC']]
+    });
+    res.json({ leads: rows, total: count });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -14,7 +18,7 @@ exports.getLeads = async (req, res) => {
 
 exports.getLeadById = async (req, res) => {
   try {
-    const lead = await Lead.getLeadById(req.params.id);
+    const lead = await Lead.findByPk(req.params.id);
     if (!lead) return res.status(404).json({ error: 'Lead not found' });
     res.json(lead);
   } catch (err) {
@@ -24,7 +28,7 @@ exports.getLeadById = async (req, res) => {
 
 exports.addLead = async (req, res) => {
   try {
-    const lead = await Lead.addLead(req.body);
+    const lead = await Lead.create(req.body);
     res.status(201).json(lead);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -33,7 +37,8 @@ exports.addLead = async (req, res) => {
 
 exports.updateLead = async (req, res) => {
   try {
-    await Lead.updateLead(req.params.id, req.body);
+    const [updated] = await Lead.update(req.body, { where: { id: req.params.id } });
+    if (!updated) return res.status(404).json({ error: 'Lead not found' });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -42,7 +47,8 @@ exports.updateLead = async (req, res) => {
 
 exports.deleteLead = async (req, res) => {
   try {
-    await Lead.deleteLead(req.params.id);
+    const deleted = await Lead.destroy({ where: { id: req.params.id } });
+    if (!deleted) return res.status(404).json({ error: 'Lead not found' });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });

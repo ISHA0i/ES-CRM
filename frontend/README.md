@@ -88,6 +88,27 @@ frontend/
 - Clients are also created automatically when a lead is approved from the Leads page.
 - Pagination controls are at the bottom of the table.
 
+## Inventory Management Page
+
+- Navigate to **/admin/inventory** or use the **Inventory** link in the Admin sidebar.
+- Features:
+  - Placeholder for inventory management (page created, logic to be implemented).
+  - Sidebar now includes an Inventory link with an archive box icon.
+
+### Usage
+- Click **Inventory** in the sidebar to access the Inventory page.
+- Extend this page with inventory management features as needed.
+
+## Inventory Navigation & Details
+
+- The Inventory page lists all components (e.g., CPU, PC) with total types, description, and serial number.
+- Clicking 'View' on a component navigates to the Component page, showing all products for that component in a table (with product name, model, image, price, availability, quantity, etc.).
+- Clicking 'View' on a product navigates to the Product page, showing all details for that product.
+- All navigation is available via the sidebar and table actions in the Admin section.
+- Product details are now shown in a drawer on the Component page (Inventory/Component.jsx) instead of a separate Product page. The Product.jsx file has been removed.
+- The edit drawer in the Inventory page and the add/edit drawer in the Component page now match the Client drawer UI for a consistent experience.
+- The Component page now uses a vertical 3-dot dropdown for row actions, matching the modern UI pattern.
+
 ## Customization
 - Add more pages to each role in their respective folders under `src/pages/`.
 - Update the sidebar menu in each layout (`AdminLayout.jsx`, `UserLayout.jsx`, `ManagerLayout.jsx`).
@@ -128,3 +149,9 @@ For more details, see the code in the `src/` directory.
 ### Form.Item Single Child Warning
 - **Warning:** `[antd: Form.Item] A Form.Item with a name prop must have a single child element.`
 - **Fix:** Make sure each `<Form.Item name=...>` wraps only one input component, not multiple elements or fragments.
+
+## Updates
+
+- The "Sr No" (serial number), "Total Types", and "Action" columns in the Inventory table now have fixed widths and are center-aligned for better readability.
+- In the Component table, the "Unit Price", "Total Quantity", and "Action" columns are also set to fixed widths and center-aligned.
+- The `sr_no` columns have been removed from the `inventory` and `component` tables in the database schema, as serial numbers are now handled only in the frontend UI.

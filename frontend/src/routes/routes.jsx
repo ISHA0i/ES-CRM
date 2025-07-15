@@ -6,6 +6,8 @@ import Lead from '../pages/admin/Lead.jsx';
 import Login from '../pages/auth/Login.jsx';
 import NotFound from '../pages/NotFound.jsx';
 import Client from '../pages/admin/Client.jsx';
+import Inventory from '../pages/admin/Inventory.jsx';
+import ComponentPage from '../pages/admin/Inventory/Component.jsx';
 
 // Placeholder: Replace with real authentication and role logic
 const getUserRole = () => {
@@ -40,6 +42,8 @@ const AppRoutes = () => {
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="leads" element={<Lead />} />
           <Route path="clients" element={<Client />} />
+          <Route path="inventory" element={<Inventory />} />
+          <Route path="inventory/:id" element={<ComponentPage />} />
           <Route path="*" element={<Navigate to="dashboard" />} />
         </Route>
         <Route

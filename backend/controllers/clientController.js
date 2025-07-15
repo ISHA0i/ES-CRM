@@ -5,8 +5,12 @@ exports.getClients = async (req, res) => {
   const pageSize = parseInt(req.query.pageSize) || 10;
   const offset = (page - 1) * pageSize;
   try {
-    const { clients, total } = await Client.getClients(offset, pageSize);
-    res.json({ clients, total });
+    const { rows, count } = await Client.findAndCountAll({
+      offset,
+      limit: pageSize,
+      order: [['id', 'DESC']]
+    });
+    res.json({ clients: rows, total: count });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -14,7 +18,7 @@ exports.getClients = async (req, res) => {
 
 exports.getClientById = async (req, res) => {
   try {
-    const client = await Client.getClientById(req.params.id);
+    const client = await Client.findByPk(req.params.id);
     if (!client) return res.status(404).json({ error: 'Client not found' });
     res.json(client);
   } catch (err) {
@@ -24,7 +28,7 @@ exports.getClientById = async (req, res) => {
 
 exports.addClient = async (req, res) => {
   try {
-    const client = await Client.addClient(req.body);
+    const client = await Client.create(req.body);
     res.status(201).json(client);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -33,7 +37,8 @@ exports.addClient = async (req, res) => {
 
 exports.updateClient = async (req, res) => {
   try {
-    await Client.updateClient(req.params.id, req.body);
+    const [updated] = await Client.update(req.body, { where: { id: req.params.id } });
+    if (!updated) return res.status(404).json({ error: 'Client not found' });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -42,7 +47,8 @@ exports.updateClient = async (req, res) => {
 
 exports.deleteClient = async (req, res) => {
   try {
-    await Client.deleteClient(req.params.id);
+    const deleted = await Client.destroy({ where: { id: req.params.id } });
+    if (!deleted) return res.status(404).json({ error: 'Client not found' });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
