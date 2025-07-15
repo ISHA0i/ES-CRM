@@ -1,5 +1,13 @@
 # CRM Frontend (Vite + React + Ant Design)
 
+# [UPDATE] Backend Structure (2024-06)
+- The backend now uses the following structure:
+  - `Inventory`: Represents inventory categories/types (e.g., Hardware, Software)
+  - `Component`: Represents component types/categories under inventory (e.g., CPU, PC, etc.), and now handles all product usage and versioning information directly as separate rows (not as a JSON column).
+- The `product_usage` table and all related backend/frontend logic have been removed. All product-related logic and fields are now managed by the `component` table and API.
+- The backend API endpoints for products are now under `/api/components`.
+- The `component` table and model now include: `id`, `inventory_id`, `product_name`, `model`, `img`, `unit_price`, `availability`, `total_quantity`, `description`, `created_at`, `updated_at`.
+
 This project is a role-based Customer Relationship Management (CRM) frontend built with Vite, React, and Ant Design (antd).
 
 ## Folder Structure
@@ -108,6 +116,12 @@ frontend/
 - Product details are now shown in a drawer on the Component page (Inventory/Component.jsx) instead of a separate Product page. The Product.jsx file has been removed.
 - The edit drawer in the Inventory page and the add/edit drawer in the Component page now match the Client drawer UI for a consistent experience.
 - The Component page now uses a vertical 3-dot dropdown for row actions, matching the modern UI pattern.
+- The Component page now supports image upload for each product. Images are stored in the backend `/uploads` folder and served at `/uploads/filename`. When adding or editing a product, you can upload an image using the UI.
+- The Component page (`src/pages/admin/Inventory/Component.jsx`) was fully refactored in June 2024:
+  - All add, edit, view, and delete product (component) features are robust and error-handled.
+  - Uses modern Ant Design best practices for forms, drawers, and dropdown menus.
+  - Improved error handling and user feedback for all API actions.
+  - Code is cleaner and more maintainable.
 
 ## Customization
 - Add more pages to each role in their respective folders under `src/pages/`.
@@ -155,3 +169,12 @@ For more details, see the code in the `src/` directory.
 - The "Sr No" (serial number), "Total Types", and "Action" columns in the Inventory table now have fixed widths and are center-aligned for better readability.
 - In the Component table, the "Unit Price", "Total Quantity", and "Action" columns are also set to fixed widths and center-aligned.
 - The `sr_no` columns have been removed from the `inventory` and `component` tables in the database schema, as serial numbers are now handled only in the frontend UI.
+
+## 2024-06 Ant Design v5 Deprecation Fixes
+
+- Updated `src/pages/admin/Inventory.jsx` and `src/pages/admin/Inventory/Component.jsx` to remove Ant Design v5 deprecation warnings:
+  - Replaced `Dropdown.overlay` with `Dropdown.menu` and refactored `Menu` to use the `items` array instead of children.
+  - Replaced `Drawer.bodyStyle` with `Drawer.styles.body`.
+  - Replaced `Modal.destroyOnClose` and `Drawer.destroyOnClose` with `destroyOnHidden`.
+  - Ensured all `Form.Item` with a `name` prop have only a single child.
+- These changes improve compatibility with Ant Design v5 and React 18+ and remove related console warnings.

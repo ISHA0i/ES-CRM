@@ -79,8 +79,9 @@ const LeadsPage = () => {
       const { data } = await fetchLeads(pageNum, PAGE_SIZE);
       setLeads(data.leads);
       setTotal(data.total);
-    } catch {
-      message.error('Failed to load leads');
+    } catch (error) {
+      console.error(error);
+      message.error(error?.response?.data?.message || error.message || 'Failed to load leads');
     } finally {
       setLoading(false);
     }
@@ -112,8 +113,9 @@ const LeadsPage = () => {
       message.success('Lead deleted');
       loadLeads(1);
       setPage(1);
-    } catch {
-      message.error('Failed to delete lead');
+    } catch (error) {
+      console.error(error);
+      message.error(error?.response?.data?.message || error.message || 'Failed to delete lead');
     } finally {
       setLoading(false);
     }
@@ -135,8 +137,9 @@ const LeadsPage = () => {
       });
       message.success('Lead approved and moved to clients');
       loadLeads(page);
-    } catch {
-      message.error('Failed to approve lead');
+    } catch (error) {
+      console.error(error);
+      message.error(error?.response?.data?.message || error.message || 'Failed to approve lead');
     } finally {
       setLoading(false);
     }
@@ -157,8 +160,9 @@ const LeadsPage = () => {
         loadLeads(page);
       }
       handleDrawerClose();
-    } catch {
-      message.error('Failed to submit');
+    } catch (error) {
+      console.error(error);
+      message.error(error?.response?.data?.message || error.message || 'Failed to submit');
     } finally {
       setFormLoading(false);
     }

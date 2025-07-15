@@ -5,7 +5,6 @@ const Inventory = sequelize.define('Inventory', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   component_name: { type: DataTypes.STRING(100), allowNull: false },
   description: { type: DataTypes.TEXT },
-  sr_no: { type: DataTypes.STRING(100) },
 }, {
   tableName: 'inventory',
   timestamps: true,

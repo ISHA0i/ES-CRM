@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Form, Input, Modal, message, Space, Dropdown, Menu, Popconfirm, Drawer } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { fetchInventory, fetchComponents, addInventory, updateInventory } from '../../api';
+import { fetchInventory, fetchComponents, addInventory, updateInventory, deleteInventory } from '../../api';
 import { PlusOutlined } from '@ant-design/icons';
 import { MoreOutlined } from '@ant-design/icons';
 import '../../root.css';
@@ -46,11 +46,12 @@ const Inventory = () => {
   const handleDelete = async (item) => {
     setLoading(true);
     try {
-      await updateInventory(item.id, { ...item, deleted: true });
+      await deleteInventory(item.id);
       message.success('Component deleted');
       loadData();
-    } catch {
-      message.error('Failed to delete component');
+    } catch (error) {
+      console.error(error);
+      message.error(error?.response?.data?.message || error.message || 'Failed to delete component');
     } finally {
       setLoading(false);
     }
@@ -86,26 +87,7 @@ const Inventory = () => {
       key: 'action',
       render: (_, record) => (
         <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item key="view">
-                <Button aria-label="View" className="ant-btn-view" size="small" onClick={() => navigate(`/admin/inventory/${record.id}`)} style={{ marginRight: 8 }}>View</Button>
-              </Menu.Item>
-              <Menu.Item key="edit">
-                <Button aria-label="Edit" className="ant-btn-edit" size="small" onClick={() => handleEdit(record)} style={{ marginRight: 8 }}>Edit</Button>
-              </Menu.Item>
-              <Menu.Item key="delete">
-                <Popconfirm
-                  title="Are you sure to delete this component?"
-                  onConfirm={() => handleDelete(record)}
-                  okText="Yes"
-                  cancelText="No"
-                >
-                  <Button aria-label="Delete" className="ant-btn-delete" size="small">Delete</Button>
-                </Popconfirm>
-              </Menu.Item>
-            </Menu>
-          }
+          menu={{ items: getMenuItems(record) }}
           trigger={["click"]}
         >
           <Button icon={<MoreOutlined />} style={{ borderRadius: 6, background: 'var(--primary-100)', color: 'var(--primary-500)' }} />
@@ -141,6 +123,35 @@ const Inventory = () => {
     form.resetFields();
   };
 
+  // 1. Refactor Dropdown+Menu to use items array
+  const getMenuItems = (record) => [
+    {
+      key: 'view',
+      label: (
+        <Button aria-label="View" className="ant-btn-view" size="small" onClick={() => navigate(`/admin/inventory/${record.id}`)} style={{ marginRight: 8 }}>View</Button>
+      ),
+    },
+    {
+      key: 'edit',
+      label: (
+        <Button aria-label="Edit" className="ant-btn-edit" size="small" onClick={() => handleEdit(record)} style={{ marginRight: 8 }}>Edit</Button>
+      ),
+    },
+    {
+      key: 'delete',
+      label: (
+        <Popconfirm
+          title="Are you sure to delete this component?"
+          onConfirm={() => handleDelete(record)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button aria-label="Delete" className="ant-btn-delete" size="small">Delete</Button>
+        </Popconfirm>
+      ),
+    },
+  ];
+
   return (
     <div style={{ padding: 24, background: 'var(--background-alt)', minHeight: '100vh' }}>
       <Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between', display: 'flex' }}>
@@ -162,7 +173,7 @@ const Inventory = () => {
         title={'Add Component'}
         onOk={handleModalOk}
         onCancel={() => { setModalVisible(false); form.resetFields(); }}
-        destroyOnClose
+        destroyOnHidden
       >
         <Form form={form} initialValues={{}}>
           <Form.Item name="component_name" label="Component Name" rules={[{ required: true, message: 'Component Name is required' }]}>
@@ -178,10 +189,10 @@ const Inventory = () => {
         open={drawer.open && drawer.mode === 'edit'}
         onClose={handleDrawerClose}
         width={400}
-        destroyOnClose
+        destroyOnHidden
         placement="right"
+        styles={{ body: { paddingBottom: 24 } }}
         style={{ zIndex: 2000, background: 'var(--background-color)', height: '100vh' }}
-        bodyStyle={{ paddingBottom: 24 }}
         footer={
           <Button type="primary" htmlType="submit" form="edit-inventory-form" block>
             Save

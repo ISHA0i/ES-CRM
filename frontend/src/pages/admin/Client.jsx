@@ -71,8 +71,9 @@ const ClientsPage = () => {
       const { data } = await fetchClients(pageNum, PAGE_SIZE);
       setClients(data.clients);
       setTotal(data.total);
-    } catch {
-      message.error('Failed to load clients');
+    } catch (error) {
+      console.error(error);
+      message.error(error?.response?.data?.message || error.message || 'Failed to load clients');
     } finally {
       setLoading(false);
     }
@@ -104,8 +105,9 @@ const ClientsPage = () => {
       message.success('Client deleted');
       loadClients(1);
       setPage(1);
-    } catch {
-      message.error('Failed to delete client');
+    } catch (error) {
+      console.error(error);
+      message.error(error?.response?.data?.message || error.message || 'Failed to delete client');
     } finally {
       setLoading(false);
     }
@@ -126,8 +128,9 @@ const ClientsPage = () => {
         loadClients(page);
       }
       handleDrawerClose();
-    } catch {
-      message.error('Failed to submit');
+    } catch (error) {
+      console.error(error);
+      message.error(error?.response?.data?.message || error.message || 'Failed to submit');
     } finally {
       setFormLoading(false);
     }

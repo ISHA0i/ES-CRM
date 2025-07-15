@@ -12,7 +12,6 @@ const Component = sequelize.define('Component', {
   availability: { type: DataTypes.STRING(50) },
   total_quantity: { type: DataTypes.INTEGER },
   description: { type: DataTypes.TEXT },
-  sr_no: { type: DataTypes.STRING(100) },
 }, {
   tableName: 'component',
   timestamps: true,

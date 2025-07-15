@@ -3,7 +3,6 @@ const API_URL = 'http://localhost:5000/api/leads';
 const CLIENT_API_URL = 'http://localhost:5000/api/clients';
 const INVENTORY_API_URL = 'http://localhost:5000/api/inventory';
 const COMPONENT_API_URL = 'http://localhost:5000/api/components';
-const PRODUCT_USAGE_API_URL = 'http://localhost:5000/api/product-usage';
 
 export const fetchLeads = (page, pageSize) =>
   axios.get(`${API_URL}?page=${page}&pageSize=${pageSize}`);
@@ -46,13 +45,16 @@ export const deleteInventory = (id) => axios.delete(`${INVENTORY_API_URL}/${id}`
 // Component APIs
 export const fetchComponents = () => axios.get(COMPONENT_API_URL);
 export const fetchComponentById = (id) => axios.get(`${COMPONENT_API_URL}/${id}`);
-export const addComponent = (data) => axios.post(COMPONENT_API_URL, data);
-export const updateComponent = (id, data) => axios.put(`${COMPONENT_API_URL}/${id}`, data);
+export const addComponent = (data) => {
+  if (data instanceof FormData) {
+    return axios.post(COMPONENT_API_URL, data);
+  }
+  return axios.post(COMPONENT_API_URL, data, { headers: { 'Content-Type': 'application/json' } });
+};
+export const updateComponent = (id, data) => {
+  if (data instanceof FormData) {
+    return axios.put(`${COMPONENT_API_URL}/${id}`, data);
+  }
+  return axios.put(`${COMPONENT_API_URL}/${id}`, data, { headers: { 'Content-Type': 'application/json' } });
+};
 export const deleteComponent = (id) => axios.delete(`${COMPONENT_API_URL}/${id}`);
-
-// Product Usage APIs
-export const fetchProductUsages = () => axios.get(PRODUCT_USAGE_API_URL);
-export const fetchProductUsageById = (id) => axios.get(`${PRODUCT_USAGE_API_URL}/${id}`);
-export const addProductUsage = (data) => axios.post(PRODUCT_USAGE_API_URL, data);
-export const updateProductUsage = (id, data) => axios.put(`${PRODUCT_USAGE_API_URL}/${id}`, data);
-export const deleteProductUsage = (id) => axios.delete(`${PRODUCT_USAGE_API_URL}/${id}`);

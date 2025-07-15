@@ -13,3 +13,6 @@ Thumbs.db
 
 # Others
 *.log
+
+# Ignore uploads folder
+uploads/
