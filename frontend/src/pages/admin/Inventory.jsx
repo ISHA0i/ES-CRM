@@ -90,7 +90,7 @@ const Inventory = () => {
           menu={{ items: getMenuItems(record) }}
           trigger={["click"]}
         >
-          <Button icon={<MoreOutlined />} style={{ borderRadius: 6, background: 'var(--primary-100)', color: 'var(--primary-500)' }} />
+          <Button icon={<MoreOutlined />} className="ant-btn-edit" style={{ borderRadius: 6 }} />
         </Dropdown>
       ),
       width: 120,
@@ -153,7 +153,7 @@ const Inventory = () => {
   ];
 
   return (
-    <div style={{ padding: 24, background: 'var(--background-alt)', minHeight: '100vh' }}>
+    <div className="hem-lead-table" style={{ padding: 24, background: 'var(--background-alt)', minHeight: '100vh' }}>
       <Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between', display: 'flex' }}>
         <h2 style={{ margin: 0, color: 'var(--primary-400)', letterSpacing: 2 }}>Inventory Components</h2>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd} style={{ background: 'var(--accent-500)', borderColor: 'var(--accent-500)', borderRadius: 6 }}>Add Component</Button>

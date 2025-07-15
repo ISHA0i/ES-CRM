@@ -11,10 +11,6 @@
   z-index: 1001;
 }
 
-.layout-content-with-fixed-sider {
-  margin-left: 240px;
-}
-
 .custom-header {
   background: #fff;
   display: flex;
@@ -64,3 +60,20 @@
   background: var(--primary-100) !important;
   color: var(--primary-500) !important;
 }
+/* 
+.ant-drawer-body {
+  background: var(--background-color) !important;
+  color: var(--primary-500) !important;
+}
+.ant-drawer-header {
+  background: var(--primary-200) !important;
+  color: var(--primary-500) !important;
+}
+.ant-drawer-footer {
+  background: var(--background-alt) !important;
+  border-top: 1px solid var(--border-color) !important;
+  padding: 12px 24px !important;
+}
+ */
+
+/* No button border rules needed here. All button border and hover color handled in LeadTableCustom.css. */

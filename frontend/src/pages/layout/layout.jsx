@@ -104,7 +104,12 @@ const AdminLayout = ({ onLogout }) => {
           items={menuItems}
         />
       </Sider>
-      <Layout className="layout-content-with-fixed-sider">
+      <Layout
+        style={{
+          marginLeft: collapsed ? 80 : 240, // 80 is the default collapsed width for AntD Sider
+          transition: 'margin-left 0.2s'
+        }}
+      >
         <Header style={headerStyle}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Button

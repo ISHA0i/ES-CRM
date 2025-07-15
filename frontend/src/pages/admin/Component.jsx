@@ -22,9 +22,9 @@ import {
   addComponent,
   updateComponent,
   deleteComponent,
-} from '../../../api';
-import '../../../root.css';
-import '../LeadTableCustom.css';
+} from '../../api';
+import '../../root.css';
+import './LeadTableCustom.css';
 
 // Utility to ensure numeric fields are numbers
 function sanitizeProductFields(product) {
@@ -133,7 +133,7 @@ const ProductForm = ({ initialValues = {}, onFinish, loading, form }) => {
         htmlType="submit"
         block
         loading={loading}
-        style={{ marginTop: 16 }}
+        style={{ marginTop: 16, display: 'none' }}
       >
         Submit
       </Button>
@@ -380,7 +380,6 @@ const ComponentPage = () => {
         width={400}
         destroyOnClose
         maskClosable={!formLoading}
-        // Remove the footer, as the submit button is now inside the form
         placement="right"
         styles={{ body: { paddingBottom: 24 } }}
         style={{
@@ -388,6 +387,13 @@ const ComponentPage = () => {
           background: 'var(--background-color)',
           height: '100vh',
         }}
+        footer={
+          (drawer.mode === 'add' || drawer.mode === 'edit') ? (
+            <Button type="primary" htmlType="submit" form="product-form" block loading={formLoading}>
+              Submit
+            </Button>
+          ) : null
+        }
       >
         {(drawer.mode === 'add' || drawer.mode === 'edit') && (
           <ProductForm

@@ -7,7 +7,7 @@ import Login from '../pages/auth/Login.jsx';
 import NotFound from '../pages/NotFound.jsx';
 import Client from '../pages/admin/Client.jsx';
 import Inventory from '../pages/admin/Inventory.jsx';
-import ComponentPage from '../pages/admin/Inventory/Component.jsx';
+import ComponentPage from '../pages/admin/Component.jsx';
 
 // Placeholder: Replace with real authentication and role logic
 const getUserRole = () => {

@@ -23,14 +23,7 @@
   color: var(--primary-500) !important;
 }
 
-.hem-lead-table .ant-btn {
-  border-radius: 6px;
-  transition: background 0.2s, color 0.2s;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0px 2px !important;
-  font-size: 12px !important;
-}
+
 
 .hem-lead-table .ant-btn[aria-label='View'],
 .hem-lead-table .ant-btn-view {
@@ -74,4 +67,83 @@
 
 .hem-lead-table .ant-table-tbody > tr > td {
   padding: 0px 2px !important;
+}
+
+.hem-lead-table .ant-drawer-body {
+  background: var(--background-color) !important;
+  color: var(--primary-500) !important;
+}
+.hem-lead-table .ant-drawer-header {
+  background: var(--primary-200) !important;
+  color: var(--primary-500) !important;
+}
+.hem-lead-table .ant-drawer-footer {
+  background: var(--background-alt) !important;
+  border-top: 1px solid var(--border-color) !important;
+  padding: 12px 24px !important;
 } 
+
+/* Global Button Styles */
+button, .ant-btn {
+  border-radius: 6px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 6px 16px;
+  font-size: 14px;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  border: none !important;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(76, 99, 144, 0.04);
+  background: var(--primary-100);
+  color: var(--primary-500);
+  cursor: pointer;
+}
+button:focus, .ant-btn:focus {
+  box-shadow: 0 0 0 2px var(--accent-200);
+}
+button:hover, .ant-btn:hover {
+  background: var(--accent-100) !important;
+  color: #000 !important;
+  border: none !important;
+}
+button:active, .ant-btn:active {
+  background: var(--primary-300);
+  color: var(--primary-900);
+}
+
+/* Primary Button */
+button[type='primary'], .ant-btn-primary {
+  background: var(--accent-500);
+  color: #fff;
+  border: none;
+}
+button[type='primary']:hover, .ant-btn-primary:hover {
+  background: var(--accent-400);
+  color: #fff;
+}
+button[type='primary']:active, .ant-btn-primary:active {
+  background: var(--accent-700);
+  color: #fff;
+}
+
+/* Danger Button */
+button.danger, .ant-btn-dangerous {
+  background: #fff0f0;
+  color: #d4380d;
+}
+button.danger:hover, .ant-btn-dangerous:hover {
+  background: #ffd6d6;
+  color: #a8071a;
+}
+
+/* Link Button */
+button.link, .ant-btn-link {
+  background: transparent;
+  color: var(--accent-500);
+  box-shadow: none;
+  padding: 0;
+}
+button.link:hover, .ant-btn-link:hover {
+  color: var(--accent-700);
+  text-decoration: underline;
+}

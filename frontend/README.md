@@ -1,5 +1,16 @@
 # CRM Frontend (Vite + React + Ant Design)
 
+## [2024-06] UI/UX Update: Modern Button Styles
+
+- All buttons across admin pages now use a modern, consistent style:
+  - Rounded corners, bold font, and improved padding for better touch targets.
+  - Unified color palette using CSS variables from `root.css`.
+  - Smooth hover, focus, and active transitions for better accessibility and feedback.
+  - Custom color overrides for View, Edit, Delete actions remain in `LeadTableCustom.css`.
+  - All Ant Design and native buttons are affected.
+- See `src/root.css` and `src/pages/admin/LeadTableCustom.css` for implementation details.
+- This change brings a more modern, accessible, and visually consistent look to all admin pages.
+
 # [UPDATE] Backend Structure (2024-06)
 - The backend now uses the following structure:
   - `Inventory`: Represents inventory categories/types (e.g., Hardware, Software)

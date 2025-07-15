@@ -205,7 +205,7 @@ const ClientsPage = () => {
         },
       }}
     >
-      <div style={{ width: '100%', background: 'var(--background-alt)', minHeight: '100vh' }}>
+      <div className="hem-lead-table" style={{ width: '100%', background: 'var(--background-alt)', minHeight: '100vh' }}>
         <Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between', display: 'flex' }}>
           <h2 style={{ margin: 0, color: 'var(--primary-400)', letterSpacing: 2 }}>Clients</h2>
           <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd} style={{ background: 'var(--accent-500)', borderColor: 'var(--accent-500)', borderRadius: 6 }}>Add Client</Button>
