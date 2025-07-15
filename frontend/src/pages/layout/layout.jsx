@@ -21,6 +21,11 @@ const AdminLayout = ({ onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  let selectedKey = location.pathname;
+  if (selectedKey.startsWith('/admin/inventory')) {
+    selectedKey = '/admin/inventory';
+  }
+
   const headerStyle = {
     background: 'var(--background-color)',
     display: 'flex',
@@ -97,7 +102,7 @@ const AdminLayout = ({ onLogout }) => {
         <Menu
           theme="dark"
           mode="inline"
-          selectedKeys={[location.pathname]}
+          selectedKeys={[selectedKey]}
           onClick={({ key }) => {
             navigate(key);
           }}

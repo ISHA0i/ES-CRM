@@ -15,8 +15,8 @@ import {
   Upload,
   Spin,
 } from 'antd';
-import { PlusOutlined, MoreOutlined, UploadOutlined } from '@ant-design/icons';
-import { useParams } from 'react-router-dom';
+import { PlusOutlined, MoreOutlined, UploadOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   fetchComponents,
   addComponent,
@@ -165,10 +165,19 @@ const ProductForm = ({ initialValues = {}, onFinish, loading, form }) => {
         <InputNumber style={{ width: '100%' }} min={0} />
       </Form.Item>
       <Form.Item
-        name="availability"
         label="Availability"
-        rules={[{ required: true, message: 'Availability is required' }]}
+        shouldUpdate={(prev, curr) => prev.total_quantity !== curr.total_quantity}
       >
+        {({ getFieldValue, setFieldsValue }) => {
+          const total = getFieldValue('total_quantity');
+          const availability = total === 0 ? 'Out of Stock' : 'Available';
+          setTimeout(() => setFieldsValue({ availability }), 0);
+          return (
+            <Input value={availability} readOnly />
+          );
+        }}
+      </Form.Item>
+      <Form.Item name="availability" style={{ display: 'none' }}>
         <Input />
       </Form.Item>
       <Form.Item
@@ -193,6 +202,7 @@ const ProductForm = ({ initialValues = {}, onFinish, loading, form }) => {
 
 const ComponentPage = () => {
   const { id } = useParams(); // inventory id
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [drawer, setDrawer] = useState({
@@ -203,7 +213,6 @@ const ComponentPage = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [viewProduct, setViewProduct] = useState(null);
   const [form] = Form.useForm();
-  // useForm(); // This line is removed as per the edit hint.
 
   // Fetch products for this inventory
   useEffect(() => {
@@ -331,6 +340,24 @@ const ComponentPage = () => {
     },
   ];
 
+  // Inline update handler for table cells
+  const handleInlineUpdate = async (record, field, value) => {
+    setFormLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('unit_price', field === 'unit_price' ? value : record.unit_price);
+      formData.append('total_quantity', field === 'total_quantity' ? value : record.total_quantity);
+      formData.append('availability', (field === 'total_quantity' ? value : record.total_quantity) === 0 ? 'Out of Stock' : 'Available');
+      await updateComponent(record.id, formData);
+      message.success('Updated');
+      loadData();
+    } catch {
+      message.error('Failed to update');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
   // Table columns
   const columns = [
     {
@@ -352,14 +379,33 @@ const ComponentPage = () => {
       key: 'unit_price',
       width: 110,
       align: 'center',
+      render: (text, record) => (
+        <InputNumber
+          min={0}
+          value={record.unit_price}
+          onChange={(val) => handleInlineUpdate(record, 'unit_price', val)}
+          style={{ width: '100%' }}
+          disabled={formLoading}
+        />
+      ),
     },
-    { title: 'Availability', dataIndex: 'availability', key: 'availability' },
+    {
+      title: 'Availability', dataIndex: 'availability', key: 'availability' },
     {
       title: 'Total Quantity',
       dataIndex: 'total_quantity',
       key: 'total_quantity',
       width: 120,
       align: 'center',
+      render: (text, record) => (
+        <InputNumber
+          min={0}
+          value={record.total_quantity}
+          onChange={(val) => handleInlineUpdate(record, 'total_quantity', val)}
+          style={{ width: '100%' }}
+          disabled={formLoading}
+        />
+      ),
     },
     {
       title: 'Action',
@@ -369,6 +415,7 @@ const ComponentPage = () => {
           <Button
             icon={<MoreOutlined />}
             className="hem-dropdown-button"
+            disabled={formLoading}
           />
         </Dropdown>
       ),
@@ -393,11 +440,17 @@ const ComponentPage = () => {
           display: 'flex',
         }}
       >
-        <h2
-          style={{ margin: 0, color: 'var(--primary-400)', letterSpacing: 2 }}
-        >
-          Products for Component
-        </h2>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Button
+            type="text"
+            icon={<ArrowLeftOutlined />}
+            onClick={() => navigate('/admin/inventory')}
+            style={{ marginRight: 2, fontSize: 15 }}
+          />
+          <h2 style={{ margin: 0, color: 'var(--primary-400)', letterSpacing: 2 }}>
+            Products for Component
+          </h2>
+        </div>
         <Button
           type="primary"
           icon={<PlusOutlined />}
@@ -419,6 +472,7 @@ const ComponentPage = () => {
           borderRadius: 10,
           marginTop: 16,
         }}
+        pagination={false}
       />
       <Drawer
         title={drawer.mode === 'add' ? 'Add Product' : 'Edit Product'}
