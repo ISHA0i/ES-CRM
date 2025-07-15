@@ -1,4 +1,5 @@
 import axios from 'axios';
+export const API_BASE = 'http://localhost:5000';
 const API_URL = 'http://localhost:5000/api/leads';
 const CLIENT_API_URL = 'http://localhost:5000/api/clients';
 const INVENTORY_API_URL = 'http://localhost:5000/api/inventory';

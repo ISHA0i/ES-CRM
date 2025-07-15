@@ -22,6 +22,7 @@ import {
   addComponent,
   updateComponent,
   deleteComponent,
+  API_BASE,
 } from '../../api';
 import '../../root.css';
 import './LeadTableCustom.css';
@@ -49,21 +50,51 @@ const ProductForm = ({ initialValues = {}, onFinish, loading, form }) => {
   const [fileList, setFileList] = useState([]);
   useEffect(() => {
     form.setFieldsValue(initialValues);
-    if (initialValues.img) {
-      setFileList([
-        {
-          uid: '-1',
-          name: initialValues.img.split('/').pop(),
-          status: 'done',
-          url: initialValues.img,
-        },
-      ]);
+    let imgUrl = initialValues.img;
+    if (typeof imgUrl === 'string' && imgUrl) {
+      // If not absolute, prefix with API_BASE
+      if (!/^https?:\/\//.test(imgUrl)) {
+        imgUrl = API_BASE + imgUrl;
+      }
+      setFileList([{
+        uid: '-1',
+        name: imgUrl.split('/').pop(),
+        status: 'done',
+        url: imgUrl,
+      }]);
+    } else if (Array.isArray(initialValues.img)) {
+      setFileList(initialValues.img.map((img, idx) => {
+        let url = img;
+        if (typeof img === 'string') {
+          if (!/^https?:\/\//.test(img)) {
+            url = API_BASE + img;
+          }
+          return { uid: String(idx), name: url.split('/').pop(), status: 'done', url };
+        }
+        // If already an object, ensure url is absolute
+        if (img && img.url && !/^https?:\/\//.test(img.url)) {
+          return { ...img, url: API_BASE + img.url };
+        }
+        return img;
+      }));
     } else {
       setFileList([]);
     }
   }, [initialValues, form]);
 
-  const normFile = (e) => (Array.isArray(e) ? e : e && e.fileList);
+  const normFile = (e) => {
+    if (Array.isArray(e)) return e;
+    if (e && Array.isArray(e.fileList)) return e.fileList;
+    return [];
+  };
+
+  // Defensive fallback before rendering:
+  let safeFileList = fileList;
+  if (!Array.isArray(safeFileList)) {
+    console.error('Upload fileList is not an array:', safeFileList, typeof safeFileList);
+    safeFileList = [].concat(safeFileList || []).filter(Boolean);
+    if (!Array.isArray(safeFileList)) safeFileList = [];
+  }
 
   return (
     <Form
@@ -89,13 +120,35 @@ const ProductForm = ({ initialValues = {}, onFinish, loading, form }) => {
         name="img"
         valuePropName="fileList"
         getValueFromEvent={normFile}
+        getValueProps={value => ({
+          fileList: Array.isArray(value)
+            ? value.map((file, idx) => {
+                if (typeof file === 'string') {
+                  let url = file;
+                  if (!/^https?:\/\//.test(url)) url = API_BASE + url;
+                  return { uid: String(idx), name: url.split('/').pop(), status: 'done', url };
+                }
+                if (file && file.url && !/^https?:\/\//.test(file.url)) {
+                  return { ...file, url: API_BASE + file.url };
+                }
+                return file;
+              })
+            : value
+            ? [{
+                uid: '-1',
+                name: value.split('/').pop(),
+                status: 'done',
+                url: !/^https?:\/\//.test(value) ? API_BASE + value : value
+              }]
+            : []
+        })}
         extra="Upload product image"
       >
         <Upload
           listType="picture"
           beforeUpload={() => false}
-          fileList={fileList}
-          onChange={({ fileList }) => setFileList(fileList)}
+          fileList={Array.isArray(fileList) ? fileList : []}
+          onChange={({ fileList }) => setFileList(Array.isArray(fileList) ? fileList : [])}
           maxCount={1}
           customRequest={({ onSuccess }) =>
             setTimeout(() => onSuccess && onSuccess('ok'), 0)
@@ -124,9 +177,6 @@ const ProductForm = ({ initialValues = {}, onFinish, loading, form }) => {
         rules={[{ required: true, message: 'Total Quantity is required' }]}
       >
         <InputNumber style={{ width: '100%' }} min={0} />
-      </Form.Item>
-      <Form.Item name="description" label="Description">
-        <Input />
       </Form.Item>
       <Button
         type="primary"
@@ -235,7 +285,9 @@ const ComponentPage = () => {
       key: 'view',
       label: (
         <Button
-          type="link"
+          aria-label="View"
+          className="ant-btn-view"
+          size="small"
           onClick={() => setViewProduct(record)}
           style={{ display: 'block', width: '100%', textAlign: 'left' }}
         >
@@ -247,7 +299,9 @@ const ComponentPage = () => {
       key: 'edit',
       label: (
         <Button
-          type="link"
+          aria-label="Edit"
+          className="ant-btn-edit"
+          size="small"
           onClick={() => handleEdit(record)}
           style={{ display: 'block', width: '100%', textAlign: 'left' }}
         >
@@ -265,8 +319,9 @@ const ComponentPage = () => {
           cancelText="No"
         >
           <Button
-            type="link"
-            danger
+            aria-label="Delete"
+            className="ant-btn-delete"
+            size="small"
             style={{ display: 'block', width: '100%', textAlign: 'left' }}
           >
             Delete
@@ -289,7 +344,7 @@ const ComponentPage = () => {
       title: 'Image',
       dataIndex: 'img',
       key: 'img',
-      render: (img) => (img ? <Image src={img} width={40} /> : 'N/A'),
+      render: (img) => (img ? <Image src={`${API_BASE}${img}`} width={40} /> : 'N/A'),
     },
     {
       title: 'Unit Price',
@@ -313,11 +368,7 @@ const ComponentPage = () => {
         <Dropdown menu={{ items: getMenuItems(record) }} trigger={['click']}>
           <Button
             icon={<MoreOutlined />}
-            style={{
-              borderRadius: 6,
-              background: 'var(--primary-100)',
-              color: 'var(--primary-500)',
-            }}
+            className="hem-dropdown-button"
           />
         </Dropdown>
       ),
@@ -351,11 +402,7 @@ const ComponentPage = () => {
           type="primary"
           icon={<PlusOutlined />}
           onClick={handleAdd}
-          style={{
-            background: 'var(--accent-500)',
-            borderColor: 'var(--accent-500)',
-            borderRadius: 6,
-          }}
+          className="hem-add-button"
         >
           Add Product
         </Button>
@@ -425,7 +472,7 @@ const ComponentPage = () => {
             </Descriptions.Item>
             <Descriptions.Item label="Image">
               {viewProduct.img ? (
-                <Image src={viewProduct.img} width={80} />
+                <Image src={`${API_BASE}${viewProduct.img}`} width={80} />
               ) : (
                 'N/A'
               )}
@@ -438,9 +485,6 @@ const ComponentPage = () => {
             </Descriptions.Item>
             <Descriptions.Item label="Total Quantity">
               {viewProduct.total_quantity}
-            </Descriptions.Item>
-            <Descriptions.Item label="Description">
-              {viewProduct.description}
             </Descriptions.Item>
           </Descriptions>
         )}

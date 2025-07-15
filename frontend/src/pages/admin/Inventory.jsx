@@ -11,7 +11,6 @@ const Inventory = () => {
   const [inventory, setInventory] = useState([]);
   const [components, setComponents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
   const [drawer, setDrawer] = useState({ open: false, mode: '', item: null });
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -98,17 +97,16 @@ const Inventory = () => {
     },
   ];
 
-  const handleModalOk = async () => {
+  const handleModalOk = async (values) => {
     try {
-      const values = await form.validateFields();
       if (drawer.mode === 'edit' && drawer.item) {
         await updateInventory(drawer.item.id, values);
         message.success('Component updated');
         handleDrawerClose();
-      } else if (!drawer.mode) {
+      } else if (drawer.mode === 'add') {
         await addInventory(values);
         message.success('Component added');
-        setModalVisible(false);
+        handleDrawerClose();
       }
       loadData();
       form.resetFields();
@@ -118,8 +116,7 @@ const Inventory = () => {
   };
 
   const handleAdd = () => {
-    setDrawer({ open: false, mode: '', item: null });
-    setModalVisible(true);
+    setDrawer({ open: true, mode: 'add', item: null });
     form.resetFields();
   };
 
@@ -168,14 +165,22 @@ const Inventory = () => {
         style={{ background: 'var(--background-color)', borderRadius: 10, marginTop: 16 }}
       />
 
-      <Modal
-        open={modalVisible}
+      <Drawer
         title={'Add Component'}
-        onOk={handleModalOk}
-        onCancel={() => { setModalVisible(false); form.resetFields(); }}
+        open={drawer.open && drawer.mode === 'add'}
+        onClose={handleDrawerClose}
+        width={400}
         destroyOnHidden
+        placement="right"
+        styles={{ body: { paddingBottom: 24 } }}
+        style={{ zIndex: 2000, background: 'var(--background-color)', height: '100vh' }}
+        footer={
+          <Button type="primary" htmlType="submit" form="add-inventory-form" block>
+            Add
+          </Button>
+        }
       >
-        <Form form={form} initialValues={{}}>
+        <Form form={form} initialValues={{}} onFinish={handleModalOk} id="add-inventory-form">
           <Form.Item name="component_name" label="Component Name" rules={[{ required: true, message: 'Component Name is required' }]}>
             <Input />
           </Form.Item>
@@ -183,7 +188,7 @@ const Inventory = () => {
             <Input />
           </Form.Item>
         </Form>
-      </Modal>
+      </Drawer>
       <Drawer
         title={'Edit Component'}
         open={drawer.open && drawer.mode === 'edit'}
