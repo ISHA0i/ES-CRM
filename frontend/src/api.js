@@ -67,3 +67,14 @@ export const fetchPackageById = (id) => axios.get(`${PACKAGE_API_URL}/${id}`);
 export const addPackage = (data) => axios.post(PACKAGE_API_URL, data);
 export const updatePackage = (id, data) => axios.put(`${PACKAGE_API_URL}/${id}`, data);
 export const deletePackage = (id) => axios.delete(`${PACKAGE_API_URL}/${id}`);
+
+// Quotation APIs
+export const fetchQuotations = () => axios.get(`${API_BASE}/api/quotations`);
+export const fetchQuotationById = (id) => axios.get(`${API_BASE}/api/quotations/${id}`);
+export const addQuotation = (data) => axios.post(`${API_BASE}/api/quotations`, data);
+export const updateQuotation = (id, data) => axios.put(`${API_BASE}/api/quotations/${id}`, data);
+export const deleteQuotation = (id) => axios.delete(`${API_BASE}/api/quotations/${id}`);
+export const fetchQuotationPDF = (id) => axios.get(`${API_BASE}/api/quotations/${id}/pdf`, { responseType: 'blob' });
+export const fetchQuotationClients = () => axios.get(`${API_BASE}/api/quotations/dropdown/clients`);
+export const fetchQuotationPackages = () => axios.get(`${API_BASE}/api/quotations/dropdown/packages`);
+export const fetchQuotationPackageProducts = (packageId) => axios.get(`${API_BASE}/api/quotations/dropdown/package-products/${packageId}`);

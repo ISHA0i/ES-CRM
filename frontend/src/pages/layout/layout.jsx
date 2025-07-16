@@ -75,6 +75,11 @@ const AdminLayout = ({ onLogout }) => {
       icon: <ArchiveBoxIcon style={{ width: 20, height: 20 }} />, // Package
       label: 'Package',
     },
+    {
+      key: '/admin/quotation',
+      icon: <ArchiveBoxIcon style={{ width: 20, height: 20 }} />, // Quotation
+      label: 'Quotation',
+    },
   ];
 
   return (

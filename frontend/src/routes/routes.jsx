@@ -9,6 +9,7 @@ import Client from '../pages/admin/Client.jsx';
 import Inventory from '../pages/admin/Inventory.jsx';
 import ComponentPage from '../pages/admin/Component.jsx';
 import Package from '../pages/admin/Package.jsx';
+import Quotation from '../pages/admin/Quotation.jsx';
 
 // Placeholder: Replace with real authentication and role logic
 const getUserRole = () => {
@@ -46,6 +47,7 @@ const AppRoutes = () => {
           <Route path="inventory" element={<Inventory />} />
           <Route path="inventory/:id" element={<ComponentPage />} />
           <Route path="package" element={<Package />} />
+          <Route path="quotation" element={<Quotation />} />
           <Route path="*" element={<Navigate to="dashboard" />} />
         </Route>
         <Route

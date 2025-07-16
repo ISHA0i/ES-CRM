@@ -6,6 +6,7 @@ const clientsRouter = require('./routes/client.routes');
 const inventoryRouter = require('./routes/inventory.routes');
 const componentRouter = require('./routes/component.routes');
 const packageRouter = require('./routes/package.routes');
+const quotationRouter = require('./routes/quotation.routes');
 
 // Middleware
 app.use(cors());
@@ -18,6 +19,7 @@ app.use('/api/clients', clientsRouter);
 app.use('/api/inventory', inventoryRouter);
 app.use('/api/components', componentRouter);
 app.use('/api/packages', packageRouter);
+app.use('/api/quotations', quotationRouter);
 
 // Start Server
 app.listen(5000, () => console.log('Server running on port 5000'));

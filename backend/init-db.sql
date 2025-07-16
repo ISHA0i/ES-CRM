@@ -69,3 +69,28 @@ CREATE TABLE IF NOT EXISTS package_product (
   FOREIGN KEY (product_id) REFERENCES component(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS quotation (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  client_id INT NOT NULL,
+  package_id INT NOT NULL,
+  custom_name VARCHAR(100),
+  custom_type ENUM('fixed', 'custom') DEFAULT 'fixed',
+  total_price DECIMAL(12,2),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
+  FOREIGN KEY (package_id) REFERENCES package(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS quotation_product (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  quotation_id INT NOT NULL,
+  component_id INT NOT NULL,
+  product_id INT NOT NULL,
+  quantity INT DEFAULT 1,
+  unit_price DECIMAL(10,2),
+  FOREIGN KEY (quotation_id) REFERENCES quotation(id) ON DELETE CASCADE,
+  FOREIGN KEY (component_id) REFERENCES inventory(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES component(id) ON DELETE CASCADE
+);
+
