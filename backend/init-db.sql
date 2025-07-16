@@ -50,3 +50,22 @@ CREATE TABLE IF NOT EXISTS component (
   FOREIGN KEY (inventory_id) REFERENCES inventory(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS package (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  type ENUM('fixed', 'custom') DEFAULT 'fixed',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS package_product (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  package_id INT NOT NULL,
+  component_id INT NOT NULL,
+  product_id INT NOT NULL,
+  quantity INT DEFAULT 1,
+  FOREIGN KEY (package_id) REFERENCES package(id) ON DELETE CASCADE,
+  FOREIGN KEY (component_id) REFERENCES inventory(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES component(id) ON DELETE CASCADE
+);
+

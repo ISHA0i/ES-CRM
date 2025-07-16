@@ -5,6 +5,7 @@ const leadsRouter = require('./routes/lead.routes');
 const clientsRouter = require('./routes/client.routes');
 const inventoryRouter = require('./routes/inventory.routes');
 const componentRouter = require('./routes/component.routes');
+const packageRouter = require('./routes/package.routes');
 
 // Middleware
 app.use(cors());
@@ -16,6 +17,7 @@ app.use('/api/leads', leadsRouter);
 app.use('/api/clients', clientsRouter);
 app.use('/api/inventory', inventoryRouter);
 app.use('/api/components', componentRouter);
+app.use('/api/packages', packageRouter);
 
 // Start Server
 app.listen(5000, () => console.log('Server running on port 5000'));

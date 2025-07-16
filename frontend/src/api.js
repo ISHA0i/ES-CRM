@@ -4,6 +4,7 @@ const API_URL = 'http://localhost:5000/api/leads';
 const CLIENT_API_URL = 'http://localhost:5000/api/clients';
 const INVENTORY_API_URL = 'http://localhost:5000/api/inventory';
 const COMPONENT_API_URL = 'http://localhost:5000/api/components';
+const PACKAGE_API_URL = 'http://localhost:5000/api/packages';
 
 export const fetchLeads = (page, pageSize) =>
   axios.get(`${API_URL}?page=${page}&pageSize=${pageSize}`);
@@ -59,3 +60,10 @@ export const updateComponent = (id, data) => {
   return axios.put(`${COMPONENT_API_URL}/${id}`, data, { headers: { 'Content-Type': 'application/json' } });
 };
 export const deleteComponent = (id) => axios.delete(`${COMPONENT_API_URL}/${id}`);
+
+// Package APIs
+export const fetchPackages = (type) => axios.get(`${PACKAGE_API_URL}${type ? `?type=${type}` : ''}`);
+export const fetchPackageById = (id) => axios.get(`${PACKAGE_API_URL}/${id}`);
+export const addPackage = (data) => axios.post(PACKAGE_API_URL, data);
+export const updatePackage = (id, data) => axios.put(`${PACKAGE_API_URL}/${id}`, data);
+export const deletePackage = (id) => axios.delete(`${PACKAGE_API_URL}/${id}`);

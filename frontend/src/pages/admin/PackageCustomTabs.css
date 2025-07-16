@@ -18,4 +18,77 @@
   background: var(--primary-500) !important;
   height: 3px !important;
   border-radius: 2px 2px 0 0;
+}
+.package-card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: flex-start;
+}
+
+.package-card {
+  flex: 0 1 calc(25% - 24px); /* 4 per row, accounting for gap */
+  max-width: calc(25% - 24px);
+  box-sizing: border-box;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px #e6eaf0;
+  background: #fff;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+.package-card:hover {
+  box-shadow: 0 8px 32px #bfc8d6;
+  transform: translateY(-6px) scale(1.04);
+  border-color: var(--primary-400);
+}
+.package-card .package-card-title {
+  padding: 36px 0 18px 0;
+  text-align: center;
+  transition: background 0.2s;
+}
+.package-card:hover .package-card-title {
+  filter: brightness(0.97) saturate(1.1);
+}
+.package-card .package-card-title span {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #181818;
+  letter-spacing: 1.5px;
+}
+.package-card .package-card-actions {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px 0 16px 0;
+  border-top: 1px solid #eee;
+  background: #fff;
+}
+.package-card .ant-btn {
+  font-size: 1.5rem;
+  color: var(--primary-400);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  transition: color 0.2s;
+}
+.package-card .ant-btn:hover {
+  color: var(--accent-500);
+  background: var(--accent-100);
+}
+@media (max-width: 1200px) {
+  .package-card {
+    flex: 0 1 calc(50% - 20px);
+    max-width: calc(50% - 20px);
+  }
+}
+@media (max-width: 700px) {
+  .package-card {
+    flex: 0 1 100%;
+    max-width: 100%;
+  }
 } 
