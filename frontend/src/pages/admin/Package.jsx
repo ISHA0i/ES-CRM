@@ -256,22 +256,48 @@ const PackageBuilder = () => {
       ))}
       {selectedProductList.length > 0 && <>
         <Divider />
-        <h3 style={{ color: 'var(--primary-400)', marginBottom: 16 }}>Selected Products in This Package</h3>
-        {selectedProductList.map(product => (
-          <Descriptions key={product.product_id} column={2} bordered size="small" style={{ marginBottom: 16 }}>
-            <Descriptions.Item label="Product Name">{product.product_name}</Descriptions.Item>
-            <Descriptions.Item label="Model">{product.model}</Descriptions.Item>
-            <Descriptions.Item label="Unit Price">{product.unit_price}</Descriptions.Item>
-            <Descriptions.Item label="Availability">{product.availability}</Descriptions.Item>
-            <Descriptions.Item label="Total Quantity">{product.total_quantity}</Descriptions.Item>
-            <Descriptions.Item label="Selected Quantity">{product.quantity}</Descriptions.Item>
-            <Descriptions.Item label="Image" span={2}>
-              {product.img ? (
-                <img src={`${API_BASE}${product.img}`} alt={product.product_name} style={{ height: 40 }} />
-              ) : 'N/A'}
-            </Descriptions.Item>
-          </Descriptions>
-        ))}
+        <h3 style={{ color: 'var(--primary-400)', marginBottom: 24, fontSize: 22, fontWeight: 800, letterSpacing: 1 }}>Selected Products in This Package</h3>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, background: 'var(--primary-100)', borderRadius: 12, padding: 24, marginBottom: 8 }}>
+          {selectedProductList.map((product) => (
+            <div key={product.product_id} style={{
+              background: '#fff',
+              borderRadius: 10,
+              boxShadow: '0 2px 8px #e6eaf0',
+              minWidth: 260,
+              maxWidth: 320,
+              flex: '1 1 260px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              padding: 20,
+              border: '1px solid var(--border-color)',
+            }}>
+              <div style={{ width: '100%', textAlign: 'center', marginBottom: 12 }}>
+                <span style={{ fontWeight: 700, fontSize: 18, color: 'var(--primary-500)' }}>{product.product_name}</span>
+                {product.model && <span style={{ color: 'var(--primary-400)', fontSize: 15, marginLeft: 8 }}>({product.model})</span>}
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                {product.img ? (
+                  <img src={`${API_BASE}${product.img}`} alt={product.product_name} style={{ height: 48, borderRadius: 6, boxShadow: '0 1px 4px #e6eaf0' }} />
+                ) : (
+                  <div style={{ height: 48, width: 48, background: 'var(--primary-200)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700 }}>N/A</div>
+                )}
+              </div>
+              <div style={{ width: '100%', fontSize: 15, color: 'var(--primary-500)', marginBottom: 4 }}>
+                <b>Unit Price:</b> {product.unit_price}
+              </div>
+              <div style={{ width: '100%', fontSize: 15, color: 'var(--primary-500)', marginBottom: 4 }}>
+                <b>Availability:</b> {product.availability}
+              </div>
+              <div style={{ width: '100%', fontSize: 15, color: 'var(--primary-500)', marginBottom: 4 }}>
+                <b>Total Quantity:</b> {product.total_quantity}
+              </div>
+              <div style={{ width: '100%', fontSize: 15, color: 'var(--accent-500)', fontWeight: 700 }}>
+                <b>Selected Quantity:</b> {product.quantity}
+              </div>
+            </div>
+          ))}
+        </div>
       </>}
     </>
   );
@@ -326,14 +352,38 @@ const PackageBuilder = () => {
       </Space>
       {renderPackages()}
       <Drawer
-        title={drawerMode === 'add' ? 'Create Package' : drawerMode === 'edit' ? 'Edit Package' : 'View Package'}
+        title={<span style={{ fontSize: 18, fontWeight: 800, color: 'var(--primary-500)', letterSpacing: 1 }}>{drawerMode === 'add' ? 'Create Package' : drawerMode === 'edit' ? 'Edit Package' : 'View Package'}</span>}
         open={drawerOpen}
         onClose={() => { setDrawerOpen(false); setEditingPackage(null); setSelectedProducts({}); setNewPackageName(''); }}
         width={900}
         destroyOnClose
         placement="right"
-        styles={{ body: { paddingBottom: 24 } }}
-        style={{ zIndex: 2100, background: 'var(--background-color)', height: '100vh' }}
+        styles={{
+          header: {
+            background: 'var(--primary-100)',
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+            boxShadow: '0 2px 8px #e6eaf0',
+            padding: '12px 32px 12px 32px',
+            borderBottom: '1px solid var(--border-color)',
+          },
+          body: {
+            background: 'var(--background-color)',
+            padding: '32px 40px 24px 40px',
+            minHeight: 'calc(100vh - 120px)',
+            borderBottomLeftRadius: 16,
+            borderBottomRightRadius: 16,
+          },
+          footer: {
+            background: 'var(--drawer-footer-bg)',
+            borderTop: '1px solid var(--border-color)',
+            padding: '20px 40px',
+            borderBottomLeftRadius: 16,
+            borderBottomRightRadius: 16,
+            boxShadow: '0 -2px 8px #e6eaf0',
+          },
+        }}
+        style={{ zIndex: 2100, background: 'transparent', height: '100vh', borderRadius: 16, boxShadow: '0 4px 32px #bfc8d6' }}
         footer={drawerMode === 'view' ? null : (
           <Button
             type="primary"
@@ -341,6 +391,7 @@ const PackageBuilder = () => {
             onClick={drawerMode === 'add' ? handleSavePackage : handleUpdatePackage}
             disabled={selectedProductList.length === 0 || !newPackageName.trim()}
             loading={loading}
+            style={{ fontSize: 16, fontWeight: 700, padding: '12px 0', borderRadius: 8 }}
           >
             {drawerMode === 'add' ? 'Create Package' : 'Save Changes'}
           </Button>
