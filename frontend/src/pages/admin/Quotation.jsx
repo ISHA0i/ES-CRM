@@ -15,6 +15,7 @@ const Quotation = () => {
   const [packageProducts, setPackageProducts] = useState([]); // for summary
   const [editingProducts, setEditingProducts] = useState([]); // for quantity
   const [formLoading, setFormLoading] = useState(false);
+  const [subject, setSubject] = useState('SYSTEM QUOTATION');
 
   useEffect(() => {
     loadQuotations();
@@ -35,6 +36,7 @@ const Quotation = () => {
     setDrawer({ open: true, mode: 'add', quotation: null });
     setEditingProducts([]);
     setPackageProducts([]);
+    setSubject('SYSTEM QUOTATION');
     form.resetFields();
     try {
       const [clientsRes, packagesRes] = await Promise.all([
@@ -65,6 +67,7 @@ const Quotation = () => {
         package_id: q.package_id,
         custom_name: q.custom_name,
       });
+      setSubject(q.subject || 'SYSTEM QUOTATION');
       setEditingProducts(q.products || []);
       setPackageProducts(q.products || []);
       setDrawer({ open: true, mode: 'edit', quotation: q });
@@ -131,6 +134,19 @@ const Quotation = () => {
     });
   };
 
+  const handleProductUnitPriceChange = (index, value) => {
+    setEditingProducts(prev => {
+      const updated = [...prev];
+      updated[index].unit_price = value;
+      return updated;
+    });
+    setPackageProducts(prev => {
+      const updated = [...prev];
+      updated[index].unit_price = value;
+      return updated;
+    });
+  };
+
   const handleAddQuotation = async () => {
     try {
       const values = await form.validateFields();
@@ -143,6 +159,7 @@ const Quotation = () => {
         package_id: values.package_id,
         custom_name: values.custom_name,
         custom_type: 'custom',
+        subject,
         products: editingProducts,
       });
       message.success('Quotation added');
@@ -163,6 +180,7 @@ const Quotation = () => {
       await updateQuotation(drawer.quotation.id, {
         custom_name: values.custom_name,
         custom_type: 'custom',
+        subject,
         products: editingProducts,
       });
       message.success('Quotation updated');
@@ -286,62 +304,6 @@ const Quotation = () => {
     </>
   );
 
-  // Helper: get selected client/package object
-  const selectedClient = clients.find(c => c.id === form.getFieldValue('client_id'));
-  const selectedPackage = packages.find(p => p.id === form.getFieldValue('package_id'));
-
-  // Client summary card
-  const renderClientSummary = () => (
-    selectedClient ? (
-      <Card size="small" style={{ marginBottom: 16, borderRadius: 10, boxShadow: '0 2px 8px #e6eaf0', border: '1px solid var(--border-color)' }}>
-        <div style={{ fontWeight: 700, fontSize: 18, color: 'var(--primary-500)' }}>{selectedClient.name}</div>
-        <div style={{ color: 'var(--primary-400)' }}>Email: {selectedClient.email}</div>
-        <div style={{ color: 'var(--primary-400)' }}>Phone: {selectedClient.phone}</div>
-        {selectedClient.whatsapp && <div style={{ color: 'var(--primary-400)' }}>WhatsApp: {selectedClient.whatsapp}</div>}
-        {selectedClient.reference && <div style={{ color: 'var(--primary-400)' }}>Reference: {selectedClient.reference}</div>}
-        {selectedClient.remark && <div style={{ color: 'var(--primary-400)' }}>Remark: {selectedClient.remark}</div>}
-      </Card>
-    ) : null
-  );
-
-  // Package summary card (show all data)
-  const renderPackageSummary = () => (
-    selectedPackage ? (
-      <Card size="small" style={{ marginBottom: 16, borderRadius: 10, boxShadow: '0 2px 8px #e6eaf0', border: '1px solid var(--border-color)' }}>
-        <div style={{ fontWeight: 700, fontSize: 18, color: 'var(--primary-500)' }}>{selectedPackage.name}</div>
-        <div style={{ color: 'var(--primary-400)' }}>Type: {selectedPackage.type}</div>
-        {selectedPackage.description && <div style={{ color: 'var(--primary-400)' }}>Description: {selectedPackage.description}</div>}
-        {selectedPackage.created_at && <div style={{ color: 'var(--primary-400)' }}>Created: {new Date(selectedPackage.created_at).toLocaleString()}</div>}
-        {selectedPackage.updated_at && <div style={{ color: 'var(--primary-400)' }}>Updated: {new Date(selectedPackage.updated_at).toLocaleString()}</div>}
-        {/* Show all other fields if present */}
-        {Object.keys(selectedPackage).map(key => (
-          !['id','name','type','description','created_at','updated_at','products'].includes(key) && selectedPackage[key] ? (
-            <div key={key} style={{ color: 'var(--primary-400)' }}>{key}: {String(selectedPackage[key])}</div>
-          ) : null
-        ))}
-        {/* Detailed product table */}
-        {packageProducts.length > 0 && <>
-          <Divider />
-          <h4 style={{ color: 'var(--primary-400)', fontWeight: 700, marginBottom: 8 }}>Products in this Package</h4>
-          <Table
-            dataSource={packageProducts}
-            rowKey={row => row.product_id || row.id}
-            pagination={false}
-            size="small"
-            columns={[
-              { title: 'Product Name', dataIndex: 'product_name', key: 'product_name' },
-              { title: 'Model', dataIndex: 'model', key: 'model' },
-              { title: 'Unit Price', dataIndex: 'unit_price', key: 'unit_price' },
-              { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
-              { title: 'Availability', dataIndex: 'availability', key: 'availability' },
-            ]}
-            style={{ marginTop: 8, marginBottom: 0 }}
-          />
-        </>}
-      </Card>
-    ) : null
-  );
-
   return (
     <div className="hem-lead-table" style={{ padding: 24, background: 'var(--background-alt)', minHeight: '100vh' }}>
       <Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between', display: 'flex' }}>
@@ -387,10 +349,42 @@ const Quotation = () => {
           <Form.Item name="custom_name" label="Quotation Name">
             <Input placeholder="Optional custom name for this quotation" disabled={drawer.mode === 'view'} />
           </Form.Item>
+          <Form.Item label="Subject">
+            <Input value={subject} onChange={e => setSubject(e.target.value)} disabled={drawer.mode === 'view'} />
+          </Form.Item>
         </Form>
-        {renderClientSummary()}
-        {renderPackageSummary()}
-        {renderProductSummary(drawer.mode === 'view')}
+        {/* Editable product table for add/edit */}
+        {drawer.mode !== 'view' && editingProducts.length > 0 && (
+          <Table
+            dataSource={editingProducts}
+            rowKey={row => row.product_id || row.id}
+            pagination={false}
+            size="small"
+            columns={[
+              { title: 'Product Name', dataIndex: 'product_name', key: 'product_name' },
+              { title: 'Model', dataIndex: 'model', key: 'model' },
+              {
+                title: 'Quantity',
+                dataIndex: 'quantity',
+                key: 'quantity',
+                render: (text, record, idx) => (
+                  <InputNumber min={1} value={editingProducts[idx]?.quantity} onChange={val => handleProductChange(idx, val)} style={{ width: 80 }} />
+                ),
+              },
+              {
+                title: 'Unit Price',
+                dataIndex: 'unit_price',
+                key: 'unit_price',
+                render: (text, record, idx) => (
+                  <InputNumber min={0} value={editingProducts[idx]?.unit_price} onChange={val => handleProductUnitPriceChange(idx, val)} style={{ width: 100 }} />
+                ),
+              },
+            ]}
+            style={{ marginTop: 8, marginBottom: 0 }}
+          />
+        )}
+        {/* Product summary for view mode */}
+        {drawer.mode === 'view' && renderProductSummary(true)}
       </Drawer>
     </div>
   );
