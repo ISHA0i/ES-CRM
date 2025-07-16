@@ -189,3 +189,15 @@ For more details, see the code in the `src/` directory.
   - Replaced `Modal.destroyOnClose` and `Drawer.destroyOnClose` with `destroyOnHidden`.
   - Ensured all `Form.Item` with a `name` prop have only a single child.
 - These changes improve compatibility with Ant Design v5 and React 18+ and remove related console warnings.
+
+## Package Management Page
+
+- Navigate to **/admin/package** or use the **Package** link in the Admin sidebar.
+- Features:
+  - Placeholder for package management (page created, logic to be implemented).
+  - Sidebar now includes a Package link with an archive box icon.
+
+### Usage
+- Click **Package** in the sidebar to access the Package page.
+- Extend this page with package management features as needed.
+- The package name input is now prefilled with a default name like `package1`, `package2`, etc., based on the number of existing packages. You can change the name if you want, but it's not required to enter a name manually.

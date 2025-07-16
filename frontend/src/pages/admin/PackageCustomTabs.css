@@ -1,0 +1,21 @@
+.package-custom-tabs .ant-tabs-nav .ant-tabs-tab {
+  color: var(--primary-400) !important;
+  background: transparent !important;
+  border: none !important;
+  font-weight: 600;
+}
+.package-custom-tabs .ant-tabs-nav .ant-tabs-tab-active {
+  color: var(--primary-500) !important;
+  border: none !important;
+}
+.package-custom-tabs .ant-tabs-nav .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--primary-500) !important;
+}
+.package-custom-tabs .ant-tabs-nav .ant-tabs-tab-btn {
+  color: var(--primary-400) !important;
+}
+.package-custom-tabs .ant-tabs-nav .ant-tabs-ink-bar {
+  background: var(--primary-500) !important;
+  height: 3px !important;
+  border-radius: 2px 2px 0 0;
+} 

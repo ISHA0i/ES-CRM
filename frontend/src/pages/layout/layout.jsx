@@ -70,6 +70,11 @@ const AdminLayout = ({ onLogout }) => {
       icon: <ArchiveBoxIcon style={{ width: 20, height: 20 }} />, // Inventory
       label: 'Inventory',
     },
+    {
+      key: '/admin/package',
+      icon: <ArchiveBoxIcon style={{ width: 20, height: 20 }} />, // Package
+      label: 'Package',
+    },
   ];
 
   return (
