@@ -216,26 +216,35 @@ const LeadsPage = () => {
       key: 'action',
       render: (_, record) => (
         <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item key="view">
-                <Button aria-label="View" className="ant-btn-view" size="small" onClick={() => handleView(record.id)} style={{ marginRight: 8 }}>View</Button>
-              </Menu.Item>
-              <Menu.Item key="edit">
-                <Button aria-label="Edit" className="ant-btn-edit" size="small" onClick={() => handleEdit(record.id)} style={{ marginRight: 8 }}>Edit</Button>
-              </Menu.Item>
-              <Menu.Item key="delete">
-                <Popconfirm
-                  title="Are you sure to delete this lead?"
-                  onConfirm={() => handleDelete(record.id)}
-                  okText="Yes"
-                  cancelText="No"
-                >
-                  <Button aria-label="Delete" className="ant-btn-delete" size="small">Delete</Button>
-                </Popconfirm>
-              </Menu.Item>
-            </Menu>
-          }
+          menu={{
+            items: [
+              {
+                key: 'view',
+                label: (
+                  <Button aria-label="View" className="ant-btn-view" size="small" onClick={() => handleView(record.id)} style={{ marginRight: 8 }}>View</Button>
+                ),
+              },
+              {
+                key: 'edit',
+                label: (
+                  <Button aria-label="Edit" className="ant-btn-edit" size="small" onClick={() => handleEdit(record.id)} style={{ marginRight: 8 }}>Edit</Button>
+                ),
+              },
+              {
+                key: 'delete',
+                label: (
+                  <Popconfirm
+                    title="Are you sure to delete this lead?"
+                    onConfirm={() => handleDelete(record.id)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button aria-label="Delete" className="ant-btn-delete" size="small">Delete</Button>
+                  </Popconfirm>
+                ),
+              },
+            ],
+          }}
           trigger={["click"]}
         >
           <Button icon={<MoreOutlined />} style={{ borderRadius: 6, background: 'var(--primary-100)', color: 'var(--primary-500)' }} />
@@ -296,7 +305,7 @@ const LeadsPage = () => {
           ) : null}
           placement="right"
           style={{ zIndex: 2000, background: 'var(--background-color)', height: '100vh' }}
-          bodyStyle={{ paddingBottom: 24 }}
+          styles={{ body: { paddingBottom: 24 } }}
         >
           {(drawer.mode === 'add' || drawer.mode === 'edit') && (
             <LeadForm

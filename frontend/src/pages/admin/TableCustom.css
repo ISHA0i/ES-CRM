@@ -1,0 +1,125 @@
+.hem-custom-table {
+  background: var(--background-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.hem-custom-table .ant-table {
+  background: transparent;
+}
+
+.hem-custom-table .ant-table-thead > tr > th {
+  background: var(--background-alt);
+  color: var(--primary-400);
+  font-weight: 600;
+  padding: 16px;
+  border-bottom: 2px solid var(--border-color);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hem-custom-table .ant-table-tbody > tr > td {
+  padding: 8px;
+  border-bottom: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.hem-custom-table .ant-table-tbody > tr:hover > td {
+  background: var(--background-alt);
+}
+
+.hem-custom-table .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+  background: var(--background-alt);
+}
+
+.hem-custom-table .ant-pagination {
+  margin: 16px;
+}
+
+.hem-custom-table .ant-pagination-item {
+  border-radius: 6px;
+}
+
+.hem-custom-table .ant-pagination-item-active {
+  background: var(--accent-500);
+  border-color: var(--accent-500);
+}
+
+.hem-custom-table .ant-pagination-item-active a {
+  color: white;
+}
+
+.hem-custom-table .ant-table-row-expand-icon {
+  border-radius: 4px;
+}
+
+/* Action buttons styling */
+.hem-action-button {
+  border: none;
+  padding: 4px 12px;
+  height: 32px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hem-action-button.view {
+  background: var(--primary-100);
+  color: var(--primary-500);
+}
+
+.hem-action-button.edit {
+  background: var(--accent-100);
+  color: var(--accent-500);
+}
+
+.hem-action-button.delete {
+  background: var(--error-100);
+  color: var(--error-500);
+}
+
+.hem-action-button:hover {
+  filter: brightness(0.95);
+}
+
+/* Status tag styling */
+.hem-status-tag {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+/* Header section styling */
+.hem-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 0 4px;
+}
+
+.hem-page-header h2 {
+  color: var(--primary-400);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.hem-page-header .ant-btn {
+  background: var(--accent-500);
+  border: none;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

@@ -327,13 +327,24 @@ const PackageBuilder = () => {
               key={pkg.id}
               className="package-card"
             >
-              <div className="package-card-title" style={{ background: bgColor }}>
+              <div className="package-card-title" style={{ 
+                background: `linear-gradient(135deg, ${bgColor}40, ${bgColor}20)`,
+                backdropFilter: 'blur(8px)'
+              }}>
                 <span>{pkg.name}</span>
               </div>
               <div className="package-card-actions">
-                <Button type="text" icon={<EditOutlined style={{ fontSize: 20 }} />} onClick={() => openDrawer('edit', pkg)} />
-                <Button type="text" icon={<DeleteOutlined style={{ fontSize: 20 }} />} onClick={() => handleDeletePackage(pkg)} />
-                <Button type="text" icon={<EyeOutlined style={{ fontSize: 20 }} />} onClick={() => openDrawer('view', pkg)} />
+                <Popconfirm
+                  title="Delete Package"
+                  description="Are you sure you want to delete this package?"
+                  onConfirm={() => handleDeletePackage(pkg)}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button icon={<DeleteOutlined style={{ fontSize: 18 }} />} />
+                </Popconfirm>
+                <Button icon={<EditOutlined style={{ fontSize: 18 }} />} onClick={() => openDrawer('edit', pkg)} />
+                <Button icon={<EyeOutlined style={{ fontSize: 18 }} />} onClick={() => openDrawer('view', pkg)} />
               </div>
             </div>
           );

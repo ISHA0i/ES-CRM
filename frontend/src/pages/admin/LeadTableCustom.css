@@ -27,7 +27,7 @@
 
 .hem-lead-table .ant-btn[aria-label='View'],
 .hem-lead-table .ant-btn-view {
-  background: var(--accent-100);
+  /* background: var(--accent-100); */
   color: var(--accent-500);
 }
 .hem-lead-table .ant-btn[aria-label='View']:hover,

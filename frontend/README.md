@@ -11,6 +11,27 @@
 - See `src/root.css` and `src/pages/admin/LeadTableCustom.css` for implementation details.
 - This change brings a more modern, accessible, and visually consistent look to all admin pages.
 
+## [2024-06] Admin Dashboard UI Enhancement
+
+- The Admin Dashboard now features a visually rich, modern card design:
+  - Animated gradient accent bars at the top of each card.
+  - Large, gradient-filled icons for each section.
+  - Bolder titles, improved spacing, and subtle entrance animations for each card.
+  - Interactive hover and focus effects for better feedback.
+  - Fully responsive layout for all screen sizes.
+  - All styles are managed via the `.dashboard-card*` classes in `src/pages/admin/PackageCustomTabs.css`.
+- To customize the dashboard appearance, edit the relevant CSS rules in `PackageCustomTabs.css`.
+
+# [2024-06] Dashboard Card UI Enhancement
+
+- The Admin Dashboard cards now feature a modern, visually appealing design:
+  - Larger icons, bolder titles, and improved spacing for better readability and aesthetics.
+  - Subtle hover and shadow effects for interactive feedback.
+  - Unified color palette and border radius for consistency with the rest of the UI.
+  - All styles are defined in `src/pages/admin/PackageCustomTabs.css` and applied via the `.dashboard-card` class.
+  - No more inline styles; all card visuals are now managed via CSS for easier maintenance and theming.
+- To customize the Dashboard card appearance, edit the `.dashboard-card*` rules in `PackageCustomTabs.css`.
+
 # [UPDATE] Backend Structure (2024-06)
 - The backend now uses the following structure:
   - `Inventory`: Represents inventory categories/types (e.g., Hardware, Software)

@@ -1,5 +1,6 @@
 @import '../../root.css';
 
+/* Layout base */
 .custom-sider {
   background: var(--primary-800) !important;
   color: var(--accent-100);
@@ -9,71 +10,159 @@
   top: 0;
   height: 100vh;
   z-index: 1001;
+  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
 }
 
+/* Sticky header */
 .custom-header {
-  background: #fff;
+  background: var(--background-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 12px;
-  min-height: 56px;
-  height: 56px;
-  border-bottom: 1px solid #f0f0f0;
-  z-index: 10;
+  padding: 0 24px;
+  height: 68px;
+  border-bottom: 1px solid var(--border-color);
   position: sticky;
   top: 0;
-  box-sizing: border-box;
-  width: 100%;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  /* backdrop-filter: blur(10px); */
 }
 
+/* Main content container */
 .custom-content {
-  padding: 8px;
-  min-height: 0;
-  height: calc(100vh - 56px);
-  background: #f5f5f5;
-  overflow: auto;
-  box-sizing: border-box;
+  padding: 24px;
+  background: var(--background-alt);
+  height: calc(100vh - 68px);
+  overflow-y: auto;
   width: 100%;
+  border-radius: 12px;
+  box-sizing: border-box;
+  transition: padding 0.3s ease;
 }
 
-.ant-menu, .ant-menu-dark {
-  background: var(--primary-800) !important;
+/* Menu styles */
+.ant-menu,
+.ant-menu-dark {
+  background: transparent !important;
   color: var(--accent-100) !important;
-  padding: 0 4px !important;
+  padding: 0 12px !important;
+  border: none !important;
 }
 
 .ant-menu-item {
-  color: var(--accent-100) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
   background: transparent !important;
-  transition: background 0.2s, color 0.2s;
-  padding: 4px 12px !important;
-  margin: 0 !important;
+  padding: 12px 18px !important;
+  margin: 6px 0 !important;
+  border-radius: 10px !important;
+  font-weight: 500;
+  border-left: 3px solid transparent !important;
+  transition: background 0.25s, border-color 0.25s;
 }
 
 .ant-menu-item-selected {
   background: var(--accent-400) !important;
   color: #fff !important;
+  border-left: 3px solid #fff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.ant-menu-item:hover, .ant-menu-item-active {
-  background: var(--primary-100) !important;
-  color: var(--primary-500) !important;
+.ant-menu-item:hover,
+.ant-menu-item-active {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #fff !important;
+  border-left: 3px solid rgba(255, 255, 255, 0.4) !important;
 }
-/* 
-.ant-drawer-body {
-  background: var(--background-color) !important;
-  color: var(--primary-500) !important;
-}
-.ant-drawer-header {
-  background: var(--primary-200) !important;
-  color: var(--primary-500) !important;
-}
-.ant-drawer-footer {
-  background: var(--background-alt) !important;
-  border-top: 1px solid var(--border-color) !important;
-  padding: 12px 24px !important;
-}
- */
 
-/* No button border rules needed here. All button border and hover color handled in LeadTableCustom.css. */
+/* Scrollbar enhancement */
+.custom-sider .ant-layout-sider-children::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-sider .ant-layout-sider-children::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+.custom-sider .ant-layout-sider-children::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 2px;
+}
+.custom-sider .ant-layout-sider-children::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Trigger button */
+.ant-layout-sider-trigger {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05)) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  transition: all 0.3s ease;
+}
+.ant-layout-sider-trigger:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+}
+
+/* Layout transition */
+.ant-layout {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Logo animation */
+@keyframes logoGlow {
+  0%, 100% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
+  }
+}
+.custom-sider .ant-layout-sider-children > div:first-child {
+  animation: logoGlow 4s ease-in-out infinite;
+}
+
+/* Shimmer loader */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+.loading-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .custom-sider {
+    width: 200px !important;
+  }
+  .ant-menu-item {
+    padding: 10px 14px !important;
+    font-size: 14px;
+  }
+  .custom-header {
+    padding: 0 16px;
+    height: 64px;
+  }
+  .custom-content {
+    padding: 16px;
+    height: calc(100vh - 64px);
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-header {
+    padding: 0 12px;
+    height: 60px;
+  }
+  .custom-content {
+    padding: 12px;
+    height: calc(100vh - 60px);
+  }
+}

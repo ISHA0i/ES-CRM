@@ -3,7 +3,7 @@ import { Button, Table, Drawer, Form, Select, Input, InputNumber, message, Space
 import { fetchQuotations, addQuotation, updateQuotation, deleteQuotation, fetchQuotationById, fetchQuotationClients, fetchQuotationPackages, fetchQuotationPackageProducts, fetchQuotationPDF } from '../../api';
 import { DownloadOutlined, PlusOutlined, MoreOutlined, EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import '../../root.css';
-import './LeadTableCustom.css';
+import './TableCustom.css';
 
 const Quotation = () => {
   const [quotations, setQuotations] = useState([]);
@@ -254,20 +254,111 @@ const Quotation = () => {
   ];
 
   const columns = [
-    { title: 'ID', dataIndex: 'id' },
-    { title: 'Client', dataIndex: 'client_name', render: (text, record) => text || record.client_id },
-    { title: 'Package', dataIndex: 'package_name', render: (text, record) => text || record.package_id },
-    { title: 'Total Price', dataIndex: 'total_price' },
-    { title: 'Created At', dataIndex: 'created_at' },
+    { 
+      title: 'Sr No', 
+      key: 'srNo',
+      width: 70,
+      align: 'center',
+      render: (_, __, index) => (
+        <span style={{ 
+          color: 'var(--primary-400)',
+          fontWeight: 600,
+          fontSize: '0.9rem'
+        }}>
+          {index + 1}
+        </span>
+      )
+    },
+    { 
+      title: 'Client', 
+      dataIndex: 'client_name',
+      render: (text, record) => (
+        <div style={{ 
+          fontWeight: 500,
+          color: 'var(--primary-500)'
+        }}>
+          {text || record.client_id}
+        </div>
+      )
+    },
+    { 
+      title: 'Package', 
+      dataIndex: 'package_name',
+      render: (text, record) => (
+        <div style={{
+          padding: '4px 12px',
+          // background: 'var(--primary-100)',
+          borderRadius: '6px',
+          color: 'var(--primary-500)',
+          fontWeight: 500,
+          display: 'inline-block'
+        }}>
+          {text || record.package_id}
+        </div>
+      )
+    },
+    { 
+      title: 'Total Price', 
+      dataIndex: 'total_price',
+      align: 'right',
+      render: (price) => (
+        <span style={{paddingRight: 18,
+          color: 'var(--accent-500)',
+          fontWeight: 700,
+          fontSize: '1.0rem'
+        }}>
+          ₹{Number(price).toLocaleString('en-IN')}
+        </span>
+      )
+    },
+    { 
+      title: 'Created At', 
+      dataIndex: 'created_at',
+      render: (date) => (
+        <div style={{
+          color: 'var(--primary-300)',
+          fontSize: '0.9rem'
+        }}>
+          {new Date(date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          })}
+        </div>
+      )
+    },
     {
       title: 'Actions',
       key: 'action',
+      width: 120,
+      align: 'center',
       render: (_, record) => (
         <Space>
           <Dropdown menu={{ items: getMenuItems(record) }} trigger={['click']}>
-            <Button icon={<MoreOutlined />} style={{ borderRadius: 6 }} />
+            <Button 
+              icon={<MoreOutlined />} 
+              style={{ 
+                borderRadius: '8px',
+                // background: 'var(--primary-100)',
+                color: 'var(--primary-500)',
+                border: 'none',
+                width: '36px',
+                height: '36px'
+              }} 
+            />
           </Dropdown>
-          <Button icon={<DownloadOutlined />} onClick={() => handleDownloadPDF(record.id)} style={{ borderRadius: 6 }} />
+          <Button 
+            icon={<DownloadOutlined />} 
+            onClick={() => handleDownloadPDF(record.id)} 
+            style={{ 
+              borderRadius: '8px',
+              // background: 'var(--accent-100)',
+              color: 'var(--accent-500)',
+              border: 'none',
+              width: '36px',
+              height: '36px'
+            }}
+          />
         </Space>
       ),
     },
@@ -285,20 +376,53 @@ const Quotation = () => {
           pagination={false}
           size="small"
           columns={[
-            { title: 'Product Name', dataIndex: 'product_name', key: 'product_name' },
+            { 
+              title: 'Product Name', 
+              dataIndex: 'product_name', 
+              key: 'product_name',
+              render: (text) => <span style={{ color: 'var(--primary-500)', fontWeight: 500 }}>{text}</span>
+            },
             { title: 'Model', dataIndex: 'model', key: 'model' },
-            { title: 'Unit Price', dataIndex: 'unit_price', key: 'unit_price' },
+            { 
+              title: 'Unit Price', 
+              dataIndex: 'unit_price', 
+              key: 'unit_price',
+              render: (price) => (
+                <span style={{ color: 'var(--accent-500)', fontWeight: 500 }}>
+                  ₹{Number(price).toLocaleString('en-IN')}
+                </span>
+              )
+            },
             {
               title: 'Quantity',
               dataIndex: 'quantity',
               key: 'quantity',
               render: (text, record, idx) => (
-                readOnly ? record.quantity : <InputNumber min={1} value={editingProducts[idx]?.quantity} onChange={val => handleProductChange(idx, val)} style={{ width: 80 }} />
+                readOnly ? (
+                  <span style={{ fontWeight: 500 }}>{record.quantity}</span>
+                ) : (
+                  <InputNumber 
+                    min={1} 
+                    value={editingProducts[idx]?.quantity} 
+                    onChange={val => handleProductChange(idx, val)} 
+                    style={{ width: 80 }}
+                  />
+                )
               ),
             },
-            { title: 'Availability', dataIndex: 'availability', key: 'availability' },
+            { 
+              title: 'Availability', 
+              dataIndex: 'availability', 
+              key: 'availability',
+              render: (text) => (
+                <Tag color={text > 0 ? 'success' : 'error'}>
+                  {text > 0 ? 'In Stock' : 'Out of Stock'}
+                </Tag>
+              )
+            },
           ]}
-          style={{ marginTop: 8, marginBottom: 0 }}
+          className="hem-custom-table"
+          style={{ marginTop: 16, marginBottom: 16 }}
         />
       </>}
     </>
@@ -306,6 +430,45 @@ const Quotation = () => {
 
   return (
     <div className="hem-lead-table" style={{ padding: 24, background: 'var(--background-alt)', minHeight: '100vh' }}>
+      <style>
+        {`
+          .custom-table .ant-table-thead > tr > th {
+            background: var(--primary-100);
+            color: var(--primary-500);
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary-200);
+            padding: 16px 12px;
+          }
+          .custom-table .ant-table-tbody > tr > td {
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--primary-100);
+          }
+          .custom-table .ant-table-tbody > tr:hover > td {
+            background: var(--primary-50) !important;
+          }
+          .custom-table .ant-table-tbody > tr:last-child > td {
+            border-bottom: none;
+          }
+          .custom-table .ant-table {
+            border-radius: 12px;
+            overflow: hidden;
+          }
+          .custom-table .ant-pagination-item {
+            border-radius: 6px;
+            border: 1px solid var(--primary-100);
+          }
+          .custom-table .ant-pagination-item-active {
+            background: var(--accent-500);
+            border-color: var(--accent-500);
+          }
+          .custom-table .ant-pagination-item-active a {
+            color: white;
+          }
+          .custom-table .ant-table-cell {
+            font-size: 0.95rem;
+          }
+        `}
+      </style>
       <Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between', display: 'flex' }}>
         <h2 style={{ margin: 0, color: 'var(--primary-400)', letterSpacing: 2 }}>Quotations</h2>
         <Button type="primary" icon={<PlusOutlined />} onClick={openDrawerAdd} style={{ background: 'var(--accent-500)', borderColor: 'var(--accent-500)', borderRadius: 6 }}>Add Quotation</Button>
@@ -329,7 +492,7 @@ const Quotation = () => {
         ) : null}
         placement="right"
         style={{ zIndex: 2000, background: 'var(--background-color)', height: '100vh' }}
-        bodyStyle={{ paddingBottom: 24 }}
+        styles={{ body: { paddingBottom: 24 } }}
       >
         <Form form={form} layout="vertical" disabled={drawer.mode === 'view'}>
           <Form.Item name="client_id" label="Client" rules={[{ required: true }]}> 
