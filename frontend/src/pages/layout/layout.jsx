@@ -127,12 +127,12 @@ const AdminLayout = ({ onLogout }) => {
       >
         <Header style={headerStyle}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Button
+            {/* <Button
               type="text"
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               onClick={() => setCollapsed(!collapsed)}
               style={{ fontSize: '16px', width: 64, height: 64 }}
-            />
+            /> */}
             <span style={{ fontWeight: 'bold', fontSize: 18, marginLeft: 16, color: 'var(--header-color)', letterSpacing: 2 }}>
               HEM INFOTECH
             </span>
